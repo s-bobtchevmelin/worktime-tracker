@@ -3,6 +3,8 @@ import { onMounted, ref } from 'vue';
 
 defineProps({
     modelValue: String,
+    options: Array,
+    dense: {type: Boolean, default: false},
 });
 
 defineEmits(['update:modelValue']);
@@ -19,10 +21,19 @@ defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-    <input
+    <select
         ref="input"
         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+        :class="{'input-dense': dense}"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
     >
+        <option v-for="(option, index) in options">{{ option }}</option>
+    </select>
 </template>
+
+<style>
+.input-dense {
+    padding: .24rem .75rem;
+}
+</style>

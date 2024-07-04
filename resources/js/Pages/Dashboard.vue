@@ -1,22 +1,51 @@
-<script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
-</script>
-
 <template>
     <AppLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-        </template>
+        <div class="grid grid-cols-2 px-6 py-8">
+            <div>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
+                <!-- WEEK -->
+                <div class="bg-white py-5 px-8">
+                    <div class="text-center mb-8">Semaine du xx au xx</div>
+                    <div>
+                        <!-- ADD PERIOD FORM -->
+                        <WorkPeriod @add-to-times="addToTimes"></WorkPeriod>
+
+                        <!-- PERIODS LIST -->
+                        <div v-for="day in days" :key="day">
+                            <SectionTitle>
+                                <template #title>
+                                    {{ day }}
+                                </template>
+                            </SectionTitle>
+
+                            <div class="mb-3">
+                                <div v-for="time in times[day]">{{ time[0] }} - {{ time[1] }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <div>
+                coucou
             </div>
         </div>
     </AppLayout>
 </template>
+
+<script setup>
+import { reactive } from 'vue';
+
+import SectionTitle from '@/Components/SectionTitle.vue';
+import WorkPeriod from '@/Components/WorkPeriod.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
+
+const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+const times = reactive({})
+
+const addToTimes = ({day, value}) => {
+    console.log(day, value);
+    times[day] = [...(times[day] || []), value];
+    
+}
+</script>
