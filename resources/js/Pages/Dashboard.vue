@@ -8,20 +8,10 @@
                     <div class="text-center mb-8">Semaine du xx au xx</div>
                     <div>
                         <!-- ADD PERIOD FORM -->
-                        <WorkPeriod @add-to-times="addToTimes"></WorkPeriod>
+                        <WorkedPeriodAdd :days="days" @add-to-times="addToTimes" />
 
                         <!-- PERIODS LIST -->
-                        <div v-for="day in days" :key="day">
-                            <SectionTitle>
-                                <template #title>
-                                    {{ day }}
-                                </template>
-                            </SectionTitle>
-
-                            <div class="mb-3">
-                                <div v-for="time in times[day]">{{ time[0] }} - {{ time[1] }}</div>
-                            </div>
-                        </div>
+                        <WorkedPeriodList :days="days" :times="times" />
                     </div>
                 </div>
             </div>
@@ -36,16 +26,14 @@
 <script setup>
 import { reactive } from 'vue';
 
-import SectionTitle from '@/Components/SectionTitle.vue';
-import WorkPeriod from '@/Components/WorkPeriod.vue';
+import WorkedPeriodAdd from '@/Components/dashboard/WorkedPeriodAdd.vue';
+import WorkedPeriodList from '@/Components/dashboard/WorkedPeriodList.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 const times = reactive({})
 
 const addToTimes = ({day, value}) => {
-    console.log(day, value);
     times[day] = [...(times[day] || []), value];
-    
 }
 </script>

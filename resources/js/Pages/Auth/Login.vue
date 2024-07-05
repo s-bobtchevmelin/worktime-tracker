@@ -6,7 +6,7 @@ import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputDefault from '@/Components/InputDefault.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -44,7 +44,7 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
-                <TextInput
+                <InputDefault
                     id="email"
                     v-model="form.email"
                     type="email"
@@ -58,7 +58,7 @@ const submit = () => {
 
             <div class="mt-4">
                 <InputLabel for="password" value="Password" />
-                <TextInput
+                <InputDefault
                     id="password"
                     v-model="form.password"
                     type="password"

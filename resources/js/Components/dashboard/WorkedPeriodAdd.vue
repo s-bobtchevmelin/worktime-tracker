@@ -16,17 +16,17 @@
 
 <script setup>
 import { ref } from 'vue';
-import SecondaryButton from './SecondaryButton.vue';
-import InputDefault from './InputDefault.vue';
-import InputSelect from './InputSelect.vue';
+import SecondaryButton from '../SecondaryButton.vue';
+import InputDefault from '../InputDefault.vue';
+import InputSelect from '../InputSelect.vue';
 
+
+const props = defineProps(['days'])
 const emit = defineEmits(['addToTimes'])
 
 const day = ref(null)
 const startInput = ref(null);
 const endInput = ref(null);
-
-const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 
 const add = async () => {
   if(!startInput.value || !endInput.value) return;

@@ -4,7 +4,7 @@ import DialogModal from './DialogModal.vue';
 import InputError from './InputError.vue';
 import PrimaryButton from './PrimaryButton.vue';
 import SecondaryButton from './SecondaryButton.vue';
-import TextInput from './TextInput.vue';
+import InputDefault from './InputDefault.vue';
 
 const emit = defineEmits(['confirmed']);
 
@@ -85,7 +85,7 @@ const closeModal = () => {
                 {{ content }}
 
                 <div class="mt-4">
-                    <TextInput
+                    <InputDefault
                         ref="passwordInput"
                         v-model="form.password"
                         type="password"

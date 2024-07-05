@@ -5,7 +5,7 @@ import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputDefault from '@/Components/InputDefault.vue';
 
 const props = defineProps({
     email: String,
@@ -37,7 +37,7 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
-                <TextInput
+                <InputDefault
                     id="email"
                     v-model="form.email"
                     type="email"
@@ -51,7 +51,7 @@ const submit = () => {
 
             <div class="mt-4">
                 <InputLabel for="password" value="Password" />
-                <TextInput
+                <InputDefault
                     id="password"
                     v-model="form.password"
                     type="password"
@@ -64,7 +64,7 @@ const submit = () => {
 
             <div class="mt-4">
                 <InputLabel for="password_confirmation" value="Confirm Password" />
-                <TextInput
+                <InputDefault
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"

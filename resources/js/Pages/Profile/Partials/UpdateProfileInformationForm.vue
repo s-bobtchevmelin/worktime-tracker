@@ -7,7 +7,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputDefault from '@/Components/InputDefault.vue';
 
 const props = defineProps({
     user: Object,
@@ -131,7 +131,7 @@ const clearPhotoFileInput = () => {
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Name" />
-                <TextInput
+                <InputDefault
                     id="name"
                     v-model="form.name"
                     type="text"
@@ -145,7 +145,7 @@ const clearPhotoFileInput = () => {
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput
+                <InputDefault
                     id="email"
                     v-model="form.email"
                     type="email"

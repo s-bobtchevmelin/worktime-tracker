@@ -13,7 +13,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
-import TextInput from '@/Components/TextInput.vue';
+import InputDefault from '@/Components/InputDefault.vue';
 
 const props = defineProps({
     tokens: Array,
@@ -88,7 +88,7 @@ const deleteApiToken = () => {
                 <!-- Token Name -->
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="name" value="Name" />
-                    <TextInput
+                    <InputDefault
                         id="name"
                         v-model="createApiTokenForm.name"
                         type="text"
