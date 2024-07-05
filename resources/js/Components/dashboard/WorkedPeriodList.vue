@@ -19,9 +19,12 @@
 <script setup>
 
 import SectionTitle from '@/Components/SectionTitle.vue';
+import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
 
-const props = defineProps(['days', 'times'])
+const props = defineProps(['days'])
+const globalStore = useGlobalStore()
+const times = globalStore.times
 
 const calculateWorkedHoursForADay = (dayTimes) => {
     let total = 0

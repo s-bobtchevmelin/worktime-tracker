@@ -5,13 +5,15 @@
 
                 <!-- WEEK -->
                 <div class="bg-white py-5 px-8">
-                    <div class="text-center mb-8">Semaine du xx au xx</div>
+                    
+                    <WeekSelector />
+
                     <div>
                         <!-- ADD PERIOD FORM -->
-                        <WorkedPeriodAdd :days="days" @add-to-times="addToTimes" />
+                        <WorkedPeriodAdd :days="days" />
 
                         <!-- PERIODS LIST -->
-                        <WorkedPeriodList :days="days" :times="times" />
+                        <WorkedPeriodList :days="days" />
                     </div>
                 </div>
             </div>
@@ -28,12 +30,8 @@ import { reactive } from 'vue';
 
 import WorkedPeriodAdd from '@/Components/dashboard/WorkedPeriodAdd.vue';
 import WorkedPeriodList from '@/Components/dashboard/WorkedPeriodList.vue';
+import WeekSelector from '@/Components/dashboard/WeekSelector.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
-const times = reactive({})
-
-const addToTimes = ({day, value}) => {
-    times[day] = [...(times[day] || []), value];
-}
 </script>

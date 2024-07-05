@@ -19,10 +19,11 @@ import { ref } from 'vue';
 import SecondaryButton from '../SecondaryButton.vue';
 import InputDefault from '../InputDefault.vue';
 import InputSelect from '../InputSelect.vue';
+import { useGlobalStore } from '@/Stores/global-store';
 
 
 const props = defineProps(['days'])
-const emit = defineEmits(['addToTimes'])
+const globalStore = useGlobalStore()
 
 const day = ref(null)
 const startInput = ref(null);
@@ -30,7 +31,9 @@ const endInput = ref(null);
 
 const add = async () => {
   if(!startInput.value || !endInput.value) return;
-  emit('addToTimes', {day: day.value, value: [startInput.value, endInput.value]})
+  
+  globalStore.addTimesForADay(day.value, [startInput.value, endInput.value])
+
   startInput.value = null
   endInput.value = null
 };
