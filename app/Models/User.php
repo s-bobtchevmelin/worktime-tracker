@@ -62,4 +62,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function periodsWorked()
+    {
+        return $this->hasMany(PeriodWorked::class);
+    }
 }

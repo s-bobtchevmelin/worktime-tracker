@@ -16,11 +16,12 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useGlobalStore } from '@/Stores/global-store';
+import { router } from '@inertiajs/vue3'
+
 import SecondaryButton from '../SecondaryButton.vue';
 import InputDefault from '../InputDefault.vue';
 import InputSelect from '../InputSelect.vue';
-import { useGlobalStore } from '@/Stores/global-store';
-
 
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
@@ -33,6 +34,7 @@ const add = async () => {
   if(!startInput.value || !endInput.value) return;
   
   globalStore.addTimesForADay(day.value, [startInput.value, endInput.value])
+  //Inertia.post('/')
 
   startInput.value = null
   endInput.value = null
