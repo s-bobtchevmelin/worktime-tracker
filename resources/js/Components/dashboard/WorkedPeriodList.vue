@@ -1,17 +1,21 @@
 <template>
-  <div v-for="day in days" :key="day" class="mb-3">
+  <div v-if="globalStore.activeWeek.length > 0" v-for="(day, index) in days" :key="day" class="mb-3">
       <SectionTitle>
           <template #title>
-              {{ day }}
+              <span>{{ day }}</span>
+              <span class="ml-3 text-base">{{ }}</span>
           </template>
       </SectionTitle>
 
       <div class="mb-1">
-          <div v-for="time in times[day]">{{ time[0] }} - {{ time[1] }}</div>
+          <div v-for="time in filteredTimes[index + 1]">
+            {{ defaultTimeFormat(time.start) }}
+             - 
+             {{ defaultTimeFormat(time.end) }}</div>
       </div>
 
-      <div v-if="times[day]" class="italic">
-          Heures travaillées : {{ calculateWorkedHoursForADay(times[day]) }}
+      <div v-if="filteredTimes[index + 1]" class="italic">
+          Heures travaillées : {{ calculateWorkedHoursForADay(filteredTimes[index + 1]) }}
       </div>
   </div>
 </template>
@@ -21,17 +25,28 @@
 import SectionTitle from '@/Components/SectionTitle.vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
+import { computed } from 'vue';
+import { defaultTimeFormat } from '@/Composables/dateTimesUtils'
 
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
-const times = globalStore.times
+
+const filteredTimes = computed(() => {
+    const times = {}
+    globalStore.times.forEach(time => {
+        const getDay = moment(time.date).weekday()
+        if(!times[getDay]) times[getDay] = [time]
+        else times[getDay].push(time)
+    })
+    return times 
+})
 
 const calculateWorkedHoursForADay = (dayTimes) => {
     let total = 0
 
     dayTimes.forEach(period => {
-        const start = moment(period[0], "HH:mm")
-        const end = moment(period[1], "HH:mm")
+        const start = moment(period.start, "HH:mm")
+        const end = moment(period.end, "HH:mm")
         const duration = moment.duration(end.diff(start))
         total += duration._milliseconds
     });

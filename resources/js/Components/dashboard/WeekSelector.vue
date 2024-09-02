@@ -1,12 +1,12 @@
 <template>
-  <div class="flex items-center justify-center mb-8">
+  <div v-if="globalStore.activeWeek.length > 0" class="flex items-center justify-center mb-8">
     <!-- Previous week -->
     <div @click="previousWeek" class="arrow-prev flex items-center justify-center">
       <div>{{ '<' }}</div>
     </div>
 
     <!-- Current week -->
-    <div>{{`Semaine du ${beautifulDate(weekStart)} au ${beautifulDate(weekEnd)}`}}</div>
+    <div>{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
 
     <!-- Next week -->
     <div @click="nextWeek" class="arrow-next flex items-center justify-center">
@@ -18,24 +18,29 @@
 <script setup>
 import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
+import { defaultDateFormat } from "@/Composables/dateTimesUtils"
 
 const globalStore = useGlobalStore()
 
-const weekStart = ref(globalStore.nowWeek[0])
-const weekEnd = ref(globalStore.nowWeek[1])
+const beautifulDate = (date) => defaultDateFormat(date)
 
-const beautifulDate = (date) => date.format('DD/MM/YYYY')
-
-const previousWeek = () => {
-  weekStart.value = weekStart.value.clone().subtract(7, 'days');
-  weekEnd.value = weekEnd.value.clone().subtract(7, 'days');
+const previousWeek = async () => {
+  const start = globalStore.activeWeek[0].clone().subtract(7, 'days');
+  const end = globalStore.activeWeek[1].clone().subtract(7, 'days');
+  await globalStore.updateActiveWeek([start, end])
 }
 
-const nextWeek = () => {
-  weekStart.value = weekStart.value.clone().add(7, 'days');
-  weekEnd.value = weekEnd.value.clone().add(7, 'days');
+const nextWeek = async () => {
+  const start = globalStore.activeWeek[0].clone().add(7, 'days');
+  const end = globalStore.activeWeek[1].clone().add(7, 'days');
+  await globalStore.updateActiveWeek([start, end])
 }
+
+onMounted(async () => {
+  const activeWeek = globalStore.getWeek;
+  await globalStore.updateActiveWeek([activeWeek[0], activeWeek[1]])
+})
 </script>
 
 <style>

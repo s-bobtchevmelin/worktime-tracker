@@ -1,21 +1,34 @@
 import { defineStore } from 'pinia'
 import moment from 'moment';
+import { dbDateFormat } from "@/Composables/dateTimesUtils"
 
 export const useGlobalStore = defineStore('global', {
   state: () => ({ 
-    times: {}
+    activeWeek: [],
+    times: []
   }),
   getters: {
-    nowWeek: () => {
-      const now = moment()
-      const startOfWeek = now.clone().startOf('isoWeek');
-      const endOfWeek = now.clone().endOf('isoWeek');
-      return [startOfWeek, endOfWeek]
+    getWeek: () => {
+      const date = moment()
+      const start = date.clone().startOf('isoWeek');
+      const end = date.clone().endOf('isoWeek');
+      return [start, end]
     },
   },
   actions: {
+    async fetchTimes () {
+      const start = dbDateFormat(this.activeWeek[0])
+      const end = dbDateFormat(this.activeWeek[1])
+      const response = await axios.get(`/workedPeriod/week/${start}/${end}`)
+      this.times = response.data
+    },
+    async updateActiveWeek(value) {
+      this.activeWeek = value;
+      await this.fetchTimes()
+    },
     addTimesForADay(day, value) {
-      this.times[day] = [...(this.times[day] || []), value];
+      // TO UPDATE
+      //this.times[day] = [...(this.times[day] || []), value];
     },
   },
 })

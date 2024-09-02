@@ -5,38 +5,56 @@
       <InputSelect v-model="day" :options="days" class="mx-3" dense></InputSelect>
 
       <span>De</span>
-      <InputDefault v-model="startInput" type="time" class="mx-3" dense />
+      <InputDefault v-model="form.start" type="time" class="mx-3" dense />
       <span>à</span>
-      <InputDefault v-model="endInput" type="time" class="mx-3" dense />
+      <InputDefault v-model="form.end" type="time" class="mx-3" dense />
       
       <SecondaryButton type="submit">Ajouter</SecondaryButton>
     </form>
+
+    <div class="mt-3 text-red-600">
+      <div v-for="error in form.errors">{{ error }}</div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useGlobalStore } from '@/Stores/global-store';
-import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3';
+import moment from 'moment';
+import { dbDateFormat } from "@/Composables/dateTimesUtils"
 
 import SecondaryButton from '../SecondaryButton.vue';
 import InputDefault from '../InputDefault.vue';
 import InputSelect from '../InputSelect.vue';
 
-const props = defineProps(['days'])
+const props = defineProps({days: Array, errors: Object})
 const globalStore = useGlobalStore()
 
 const day = ref(null)
-const startInput = ref(null);
-const endInput = ref(null);
+const form = useForm({
+  start: null,
+  end: null
+})
 
 const add = async () => {
-  if(!startInput.value || !endInput.value) return;
-  
-  globalStore.addTimesForADay(day.value, [startInput.value, endInput.value])
-  //Inertia.post('/')
+  if(!form.start || !form.end) return;
 
-  startInput.value = null
-  endInput.value = null
+  const dayIndex = props.days.indexOf(day.value)
+  
+  form
+    .transform(data => ({
+      date: dbDateFormat(globalStore.getDateDependingOnDayIndex(dayIndex)),
+      start: data.start + ':00',
+      end: data.end + ':00'
+    }))
+    .post('/workedPeriod', {
+      onSuccess: (test) => {
+        console.log(test)
+        globalStore.addTimesForADay(day.value, [form.start, form.end])
+        form.reset()
+      }
+    })
 };
 </script>

@@ -4,15 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkedPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class WorkedPeriodController extends Controller
 {
+    private function validator($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+            'start' => 'required|date_format:H:i:s',
+            'end' => 'required|date_format:H:i:s',
+        ]);
+
+        if($validator->fails()) {
+            return redirect('/dashboard')->withErrors($validator)->withInput();     
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function indexWeek(string $start, string $end)
     {
-        //
+        return WorkedPeriod::where('user_id', Auth::id())
+            ->whereBetween('date', [date($start), date($end)])
+            ->get();
     }
 
     /**
@@ -20,7 +39,16 @@ class WorkedPeriodController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validator($request);
+        
+        WorkedPeriod::create([
+            'user_id' => Auth::id(),
+            'date' => $request->get('date'),
+            'start' => $request->get('start'),
+            'end' => $request->get('end')
+        ]);
+
+        return redirect('/dashboard');
     }
 
     /**
