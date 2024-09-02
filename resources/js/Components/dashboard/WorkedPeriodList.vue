@@ -3,7 +3,7 @@
       <SectionTitle>
           <template #title>
               <span>{{ day }}</span>
-              <span class="ml-3 text-base">{{ }}</span>
+              <span class="ml-3 text-base">{{ getDayOfWeek(index) }}</span>
           </template>
       </SectionTitle>
 
@@ -40,6 +40,11 @@ const filteredTimes = computed(() => {
     })
     return times 
 })
+
+const getDayOfWeek = (index) => {
+    const date = globalStore.activeWeek[0].clone().add(index, 'days');
+    return date.format('DD')
+}
 
 const calculateWorkedHoursForADay = (dayTimes) => {
     let total = 0

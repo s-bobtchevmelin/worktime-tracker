@@ -26,9 +26,5 @@ export const useGlobalStore = defineStore('global', {
       this.activeWeek = value;
       await this.fetchTimes()
     },
-    addTimesForADay(day, value) {
-      // TO UPDATE
-      //this.times[day] = [...(this.times[day] || []), value];
-    },
   },
 })

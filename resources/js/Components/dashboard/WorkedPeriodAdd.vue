@@ -45,14 +45,13 @@ const add = async () => {
   
   form
     .transform(data => ({
-      date: dbDateFormat(globalStore.getDateDependingOnDayIndex(dayIndex)),
+      date: dbDateFormat(globalStore.activeWeek[0].clone().add(dayIndex, 'days')),
       start: data.start + ':00',
       end: data.end + ':00'
     }))
     .post('/workedPeriod', {
-      onSuccess: (test) => {
-        console.log(test)
-        globalStore.addTimesForADay(day.value, [form.start, form.end])
+      onSuccess: async () => {
+        await globalStore.fetchTimes()
         form.reset()
       }
     })
