@@ -19,8 +19,7 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - build_front
-      - build_deploy_app
+      - transfer_to_server
 
 #lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
 #            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-api /api; bye"
