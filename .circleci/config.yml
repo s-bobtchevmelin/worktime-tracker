@@ -3,6 +3,27 @@ orbs:
   node: circleci/node@4.1.0
 
 jobs:
+  build_test:
+    docker:
+      - image: cimg/node:lts-browsers
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            composer require tightenco/ziggy
+
+  build_front:
+    docker:
+      - image: cimg/node:lts-browsers
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo npm install -g npm@latest
+
   # Build and deploy laravel api files
   build_deploy_app:
     docker:
@@ -12,17 +33,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo npm install -g npm@latest
             sudo apt-get update
-            composer require tightenco/ziggy
-      - node/install-packages:
-          app-dir: "./"
-          cache-path: ./node_modules
-          override-ci-command: npm install
-      - run:
-          name: Build and compile files
-          command: |
-            npm run build
       - run:
           name: Deploy api via FTP
           command: |
