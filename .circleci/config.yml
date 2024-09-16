@@ -12,7 +12,6 @@ jobs:
           name: Install dependencies
           command: |
             sudo npm install -g npm@latest
-            sudo npm i -g @quasar/cli
             composer require tightenco/ziggy
       - node/install-packages:
           app-dir: "./"
