@@ -3,17 +3,6 @@ orbs:
   node: circleci/node@4.1.0
 
 jobs:
-  build_test:
-    docker:
-      - image: cimg/node:lts-browsers
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt-get update
-            composer require tightenco/ziggy
-
   build_front:
     docker:
       - image: cimg/node:lts-browsers
@@ -43,7 +32,6 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - build_test
       - build_front
       - build_deploy_app
 
