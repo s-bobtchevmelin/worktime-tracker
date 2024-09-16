@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Ramsey\Uuid\Type\Integer;
 
 class WorkedPeriodController extends Controller
 {
@@ -70,8 +71,11 @@ class WorkedPeriodController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(WorkedPeriod $workedPeriod)
+    public function destroy(int $id)
     {
-        //
+        $period = WorkedPeriod::find($id);
+        if($period && $period->user_id === Auth::id()) {
+            WorkedPeriod::destroy($id);
+        }
     }
 }
