@@ -1,0 +1,49 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+
+jobs:
+  build_front:
+    docker:
+      - image: cimg/node:lts-browsers
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo npm install -g npm@latest
+            sudo npm i -g @quasar/cli
+      - node/install-packages:
+          app-dir: "./"
+          cache-path: ./node_modules
+          override-ci-command: npm install
+      - run:
+          name: Build and compile files
+          command: |
+            npm run build
+      - run:
+          name: Deploy front via FTP
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y lftp
+            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
+
+  # Build and deploy laravel api files
+  build_deploy_app:
+    docker:
+      - image: cimg/php:8.3.2
+    steps:
+      - checkout
+      - run:
+          name: Deploy api via FTP
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y lftp
+            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-api /api; bye"
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build_front
+      - build_deploy_app
