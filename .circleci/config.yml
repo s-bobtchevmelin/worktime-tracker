@@ -8,16 +8,16 @@ jobs:
     steps:
       - checkout
       - run:
-        name: "Setup custom environment variables"
-        command: |
-          export COMMIT_MSG=$(git log --format=%B -n 1 $CIRCLE_SHA1)
-          echo "Commit Message: $COMMIT_MSG"
-          if [[ !($COMMIT_MSG == *"@transfer") ]]; then
-            echo "Skipping transfert"
-            circleci step halt
-          else
-            echo "Continue deploy"
-          fi
+          name: "Setup custom environment variables"
+          command: |
+            export COMMIT_MSG=$(git log --format=%B -n 1 $CIRCLE_SHA1)
+            echo "Commit Message: $COMMIT_MSG"
+            if [[ !($COMMIT_MSG == *"@transfer") ]]; then
+              echo "Skipping transfert"
+              circleci step halt
+            else
+              echo "Continue deploy"
+            fi
       - run:
           name: Deploy api via FTP
           command: |
