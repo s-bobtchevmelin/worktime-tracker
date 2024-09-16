@@ -3,14 +3,16 @@ orbs:
   node: circleci/node@4.1.0
 
 jobs:
-  build_front:
+  # Build and deploy laravel api files
+  build_deploy_app:
     docker:
-      - image: cimg/node:lts-browsers
+      - image: cimg/php:8.3.2
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
+            sudo apt-get update
             composer require tightenco/ziggy
       - node/install-packages:
           app-dir: "./"
@@ -21,28 +23,14 @@ jobs:
           command: |
             npm run build
       - run:
-          name: Deploy front via FTP
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y lftp
-
-  # Build and deploy laravel api files
-  build_deploy_app:
-    docker:
-      - image: cimg/php:8.3.2
-    steps:
-      - checkout
-      - run:
           name: Deploy api via FTP
           command: |
-            sudo apt-get update
             sudo apt-get install -y lftp
 
 workflows:
   version: 2
   deploy:
     jobs:
-      - build_front
       - build_deploy_app
 
 #lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
