@@ -12,6 +12,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo npm install -g npm@latest
             sudo apt-get update
             composer require tightenco/ziggy
       - node/install-packages:
