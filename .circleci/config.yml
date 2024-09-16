@@ -13,6 +13,7 @@ jobs:
           command: |
             sudo npm install -g npm@latest
             sudo npm i -g @quasar/cli
+            composer require tightenco/ziggy
       - node/install-packages:
           app-dir: "./"
           cache-path: ./node_modules
@@ -26,7 +27,6 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
-            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
 
   # Build and deploy laravel api files
   build_deploy_app:
@@ -39,7 +39,6 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
-            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-api /api; bye"
 
 workflows:
   version: 2
@@ -47,3 +46,7 @@ workflows:
     jobs:
       - build_front
       - build_deploy_app
+
+#lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
+#            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-api /api; bye"
+
