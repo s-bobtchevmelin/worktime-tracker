@@ -11,7 +11,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo npm install -g npm@latest
             composer require tightenco/ziggy
       - node/install-packages:
           app-dir: "./"
