@@ -1,6 +1,37 @@
 version: 2.1
 
 jobs:
+  build_deploy_front:
+    docker:
+      - image: cimg/node:lts-browsers
+      - image: cimg/php:8.3.2
+    steps:
+      - checkout
+      - run:
+          name: "Setup custom environment variables"
+          command: |
+            export COMMIT_MSG=$(git log --format=%B -n 1 $CIRCLE_SHA1)
+            echo "Commit Message: $COMMIT_MSG"
+            if [[ !($COMMIT_MSG == *"@transfer") ]]; then
+              echo "Skipping transfer"
+              circleci step halt
+            else
+              echo "Continue deploy"
+            fi
+      - node/install-packages:
+          app-dir: "."
+          cache-path: ./node_modules
+          override-ci-command: npm install
+      - run:
+          name: Build and compile files
+          command: |
+            npm run build
+      - run:
+          name: Deploy front via FTP
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y lftp
+
   # Build and deploy laravel api files
   transfer_to_server:
     docker:
