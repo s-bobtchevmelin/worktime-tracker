@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   node: circleci/node@4.1.0
-  composer: t3n/composer@2.0.0
 
 jobs:
   # Build and deploy laravel api files
