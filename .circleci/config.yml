@@ -9,6 +9,14 @@ jobs:
       - image: cimg/php:8.3.2
     steps:
       - checkout
+      - node/install-packages:
+          app-dir: "."
+          cache-path: ./node_modules
+          override-ci-command: npm install
+      - run:
+          name: Build and compile files
+          command: |
+            npm run build
       - run:
           name: "Setup custom environment variables"
           command: |
@@ -20,14 +28,6 @@ jobs:
             else
               echo "Continue deploy"
             fi
-      - node/install-packages:
-          app-dir: "."
-          cache-path: ./node_modules
-          override-ci-command: npm install
-      - run:
-          name: Build and compile files
-          command: |
-            npm run build
       - run:
           name: Deploy front via FTP
           command: |
@@ -61,8 +61,11 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - build_deploy_front
       - transfer_to_server
+      - build_deploy_front
+          requires:
+            - transfer_to_server
+
 
 #lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
 #            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-api /api; bye"
