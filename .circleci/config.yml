@@ -67,8 +67,8 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
-            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./ /public; bye"
-            
+            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./public /public; bye"
+
 workflows:
   version: 2
   deploy:
