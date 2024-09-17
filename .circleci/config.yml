@@ -60,9 +60,14 @@ jobs:
       - run:
           name: Deploy api via FTP
           command: |
+          rm -rf node_modules
+          rm -rf vendor
+      - run:
+          name: Deploy api via FTP
+          command: |
             sudo apt-get update
             sudo apt-get install -y lftp
-            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./public /public; bye"
+            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./ /public; bye"
 workflows:
   version: 2
   deploy:

@@ -5,6 +5,8 @@ cp ../.env ./.env
 
 composer install
 
+npm install
+
 php artisan config:clear
 
 php artisan key:generate
