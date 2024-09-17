@@ -62,7 +62,7 @@ workflows:
   deploy:
     jobs:
       - transfer_to_server
-      - build_deploy_front
+      - build_deploy_front:
           requires:
             - transfer_to_server
 
