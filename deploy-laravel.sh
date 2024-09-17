@@ -17,8 +17,4 @@ php artisan view:clear
 
 php artisan cache:clear
 
-npm install
-
-npm run build
-
 php artisan serve
