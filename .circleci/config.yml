@@ -25,6 +25,7 @@ jobs:
           command: |
             rm -rf node_modules
             rm -rf vendor
+            ls -la
       - run:
           name: Deploy api via FTP
           command: |
