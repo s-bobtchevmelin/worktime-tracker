@@ -29,21 +29,17 @@ jobs:
     
   build_deploy_front:
     docker:
-      - image: cimg/node:lts-browsers
-      - image: cimg/php:8.3.2
+      - image: cimg/php:8.3.2-node
     steps:
       - checkout
       - run:
           name: Composer dependencies
           command: |
             composer install
-      - node/install-packages:
-          app-dir: "."
-          cache-path: ./node_modules
-          override-ci-command: npm install
       - run:
           name: Build and compile files
           command: |
+            npm install
             npm run build
       - run:
           name: "Setup custom environment variables"
