@@ -1,14 +1,43 @@
 version: 2.1
 orbs:
   node: circleci/node@4.1.0
+  composer: t3n/composer@2.0.0
 
 jobs:
+  # Build and deploy laravel api files
+  transfer_to_server:
+    docker:
+      - image: cimg/php:8.3.2
+    steps:
+      - checkout
+      - run:
+          name: "Setup custom environment variables"
+          command: |
+            export COMMIT_MSG=$(git log --format=%B -n 1 $CIRCLE_SHA1)
+            echo "Commit Message: $COMMIT_MSG"
+            if [[ !($COMMIT_MSG == *"@transfer") ]]; then
+              echo "Skipping transfer"
+              circleci step halt
+            else
+              echo "Continue deploy"
+            fi
+      - run:
+          name: Deploy api via FTP
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y lftp
+            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./ /; bye"
+    
   build_deploy_front:
     docker:
       - image: cimg/node:lts-browsers
       - image: cimg/php:8.3.2
     steps:
       - checkout
+      - run:
+          name: Composer dependencies
+          command: |
+            composer install
       - node/install-packages:
           app-dir: "."
           cache-path: ./node_modules
@@ -33,30 +62,6 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
-
-  # Build and deploy laravel api files
-  transfer_to_server:
-    docker:
-      - image: cimg/php:8.3.2
-    steps:
-      - checkout
-      - run:
-          name: "Setup custom environment variables"
-          command: |
-            export COMMIT_MSG=$(git log --format=%B -n 1 $CIRCLE_SHA1)
-            echo "Commit Message: $COMMIT_MSG"
-            if [[ !($COMMIT_MSG == *"@transfer") ]]; then
-              echo "Skipping transfer"
-              circleci step halt
-            else
-              echo "Continue deploy"
-            fi
-      - run:
-          name: Deploy api via FTP
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y lftp
-            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./ /; bye"
 workflows:
   version: 2
   deploy:
@@ -65,8 +70,3 @@ workflows:
       - build_deploy_front:
           requires:
             - transfer_to_server
-
-
-#lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-front/dist/spa /public; bye"
-#            lftp -c "set ftp:ssl-allow no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete ./cardCraft-api /api; bye"
-
