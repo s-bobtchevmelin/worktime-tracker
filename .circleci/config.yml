@@ -21,6 +21,11 @@ jobs:
               echo "Continue deploy"
             fi
       - run:
+          name: Remove vendor and node_module
+          command: |
+            rm -rf node_modules
+            rm -rf vendor
+      - run:
           name: Deploy api via FTP
           command: |
             sudo apt-get update
@@ -52,16 +57,6 @@ jobs:
             else
               echo "Continue deploy"
             fi
-      - run:
-          name: Deploy front via FTP
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y lftp
-      - run:
-          name: Deploy api via FTP
-          command: |
-            rm -rf node_modules
-            rm -rf vendor
       - run:
           name: Deploy api via FTP
           command: |
