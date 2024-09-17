@@ -60,8 +60,8 @@ jobs:
       - run:
           name: Deploy api via FTP
           command: |
-          rm -rf node_modules
-          rm -rf vendor
+            rm -rf node_modules
+            rm -rf vendor
       - run:
           name: Deploy api via FTP
           command: |
