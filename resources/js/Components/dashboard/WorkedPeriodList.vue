@@ -33,7 +33,7 @@ import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
 import { computed } from 'vue';
 import { defaultTimeFormat } from '@/Composables/dateTimesUtils'
-import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
@@ -68,7 +68,8 @@ const calculateWorkedHoursForADay = (dayTimes) => {
 }
 
 const deletePeriod = async(time) => {
-	router.delete(`/workedPeriod/${time.id}`, {
+	const form = useForm({})
+	form.delete(`/workedPeriod/${time.id}`, {
 		onSuccess: async () => {
 			await globalStore.fetchTimes()
 		}

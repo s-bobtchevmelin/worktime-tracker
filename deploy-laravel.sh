@@ -1,4 +1,4 @@
-# cd cardcraft.sarah-bobtchev-melin.com/cardcraft/api/
+# cd worktime-tracker.sarah-bobtchev-melin.com/admin
 # chmod +x ./deploy-laravel.sh && ./deploy-laravel.sh
 
 cp ../.env ./.env
