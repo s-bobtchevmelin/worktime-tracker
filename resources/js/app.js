@@ -8,6 +8,9 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import {createPinia} from "pinia";
 import axios from 'axios';
 
+// Set up Axios to include credentials
+axios.defaults.withCredentials = true;
+
 axios.get('/sanctum/csrf-cookie')
 .then(() => {
     const pina = createPinia()
