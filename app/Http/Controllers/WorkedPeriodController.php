@@ -74,11 +74,8 @@ class WorkedPeriodController extends Controller
     public function destroy(int $id)
     {
         $period = WorkedPeriod::find($id);
-        Log::info($period);
-        Log::info(Auth::id());
         if($period && $period->user_id === Auth::id()) {
-            $test = WorkedPeriod::destroy($id);
-            Log::info($test);
+            WorkedPeriod::destroy($id);
         }
     }
 }

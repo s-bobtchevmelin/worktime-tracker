@@ -17,14 +17,6 @@
 					class="ml-2 cursor-pointer" 
 					@click="deletePeriod(time)"
 				>
-
-				<form>
-					<img src="../../../images/trash-icon-red.svg" 
-						width="18" 
-						class="ml-2 cursor-pointer" 
-						@click="deletePeriod2(time)"
-					>
-				</form>
 			</div>
 		</div>
 
@@ -80,22 +72,7 @@ const deletePeriod = async(time) => {
 	form.delete(`/workedPeriod/${time.id}`, {
 		onSuccess: async () => {
 			await globalStore.fetchTimes()
-		},
-		onError: (errors) => {
-			console.log(errors)
 		}
 	})
 }
-
-const deletePeriod2 = async(time) => {
-	axios.delete(`/workedPeriod/${time.id}`, {
-		onSuccess: async () => {
-			await globalStore.fetchTimes()
-		},
-		onError: (errors) => {
-			console.log(errors)
-		}
-	})
-}
-
 </script>
