@@ -18,5 +18,5 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'))->name('dashboard');
     Route::get('/workedPeriod/week/{start}/{end}', [WorkedPeriodController::class, 'indexWeek'])->name('workedPeriodWeek');
     Route::post('/workedPeriod', [WorkedPeriodController::class, 'store'])->name('workedPeriodAdd');
-    Route::delete('/workedPeriod/{id}', [WorkedPeriodController::class, 'destroy'])->name('workedPeriodDelete');
+    Route::post('/workedPeriod/{id}/delete', [WorkedPeriodController::class, 'destroy'])->name('workedPeriodDelete');
 });

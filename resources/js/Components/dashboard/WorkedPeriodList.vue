@@ -69,7 +69,7 @@ const calculateWorkedHoursForADay = (dayTimes) => {
 
 const deletePeriod = async(time) => {
 	const form = useForm({})
-	form.delete(`/workedPeriod/${time.id}`, {
+	form.post(`/workedPeriod/${time.id}/delete`, {
 		onSuccess: async () => {
 			await globalStore.fetchTimes()
 		}
