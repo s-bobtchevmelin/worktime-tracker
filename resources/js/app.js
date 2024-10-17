@@ -6,6 +6,9 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import {createPinia} from "pinia";
+import axios from 'axios';
+
+await axios.get('/sanctum/csrf-cookie')
 
 const pina = createPinia()
 
