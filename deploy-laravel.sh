@@ -1,3 +1,4 @@
+# Run this avec deployed on circle ci
 # cd worktime-tracker.sarah-bobtchev-melin.com/admin
 # chmod +x ./deploy-laravel.sh && ./deploy-laravel.sh
 
