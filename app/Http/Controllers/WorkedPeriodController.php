@@ -31,6 +31,7 @@ class WorkedPeriodController extends Controller
     {
         return WorkedPeriod::where('user_id', Auth::id())
             ->whereBetween('date', [date($start), date($end)])
+            ->with('tag')
             ->get();
     }
 

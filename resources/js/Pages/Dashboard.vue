@@ -1,25 +1,25 @@
 <template>
-    <AppLayout title="Dashboard">
-        <div class="grid grid-cols-12 md:px-6 py-2 md:py-8">
+  <AppLayout title="Dashboard">
+    <div class="grid grid-cols-12 md:px-6 py-2 md:py-8">
 
-            <!-- WEEK -->
-            <div :class="'order-2 md:order-1 col-span-12 md:col-span-7 ' + boxCSS">
-                <WeekSelector />
+        <!-- WEEK -->
+      <div :class="'order-2 md:order-1 col-span-12 md:col-span-7 ' + boxCSS">
+        <WeekSelector />
 
-                <div>
-                    <!-- ADD PERIOD FORM -->
-                    <WorkedPeriodAdd :days="days" :tags="tags" />
+        <div>
+          <!-- ADD PERIOD FORM -->
+          <WorkedPeriodAdd :days="days" :tags="tags" />
 
-                    <!-- PERIODS LIST -->
-                    <WorkedPeriodList :days="days" />
-                </div>
-            </div>
-
-            <div :class="'order-1 md:rder-2 col-span-12 md:col-span-5 mb-2 md:mb-0' + boxCSS">
-                coucou
-            </div>
+          <!-- PERIODS LIST -->
+          <WorkedPeriodList :days="days" />
         </div>
-    </AppLayout>
+      </div>
+
+      <div :class="'order-1 md:order-2 col-span-12 md:col-span-5 mb-2 md:mb-0' + boxCSS">
+        coucou
+      </div>
+    </div>
+  </AppLayout>
 </template>
 
 <script setup>

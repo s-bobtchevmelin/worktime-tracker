@@ -8,15 +8,26 @@
 		</SectionTitle>
 
 		<div class="mb-1">
-			<div v-for="time in filteredTimes[index + 1]" class="flex">
-				{{ defaultTimeFormat(time.start) }}
-				- 
-				{{ defaultTimeFormat(time.end) }}
-				<img src="../../../images/trash-icon-red.svg" 
-					width="18" 
-					class="ml-2 cursor-pointer" 
-					@click="deletePeriod(time)"
-				>
+			<div v-for="time in filteredTimes[index + 1]" class="w-4/12 flex items-center justify-between">
+
+        <div class="flex">
+          
+          <!-- Delete -->
+          <img src="../../../images/trash-icon-red.svg" 
+            width="18" 
+            class="col-span-1 mr-2 cursor-pointer" 
+            @click="deletePeriod(time)"
+          >
+
+          <!-- Time -->
+          <span >{{ defaultTimeFormat(time.start) }} - {{ defaultTimeFormat(time.end) }}</span>
+        </div>
+
+        <!-- Tag -->
+         <div class="w-3/12">
+          <tag v-if="time.tag" :tag="time.tag"></tag>
+         </div>
+         
 			</div>
 		</div>
 
@@ -29,6 +40,7 @@
 <script setup>
 
 import SectionTitle from '@/Components/SectionTitle.vue';
+import Tag from '../Tag.vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
 import { computed } from 'vue';

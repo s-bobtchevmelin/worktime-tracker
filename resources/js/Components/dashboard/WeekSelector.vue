@@ -1,17 +1,23 @@
 <template>
   <div v-if="globalStore.activeWeek.length > 0" class="flex items-center justify-around md:justify-center mb-8 text-center">
+
     <!-- Previous week -->
-    <div @click="previousWeek" class="arrow-prev flex items-center justify-center mr-3">
-      <div>{{ '<' }}</div>
-    </div>
+    <img src="../../../images/arrowCircleRight-icon.svg" 
+      width="22" 
+      class="mr-2 cursor-pointer" 
+      style="transform: rotate(180deg);"
+      @click="previousWeek"
+    >
 
     <!-- Current week -->
-    <div>{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
+    <div class="font-medium">{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
 
     <!-- Next week -->
-    <div @click="nextWeek" class="arrow-next flex items-center justify-center ml-3">
-      <div>{{ '>' }}</div>
-    </div>
+    <img src="../../../images/arrowCircleRight-icon.svg" 
+      width="22" 
+      class="ml-2 cursor-pointer" 
+      @click="nextWeek"
+    >
   </div>
 </template>
 
