@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('worked_periods', function (Blueprint $table) {
-            $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Tag::class)->nullable()->constrained()->cascadeOnDelete();
         });
     }
 
