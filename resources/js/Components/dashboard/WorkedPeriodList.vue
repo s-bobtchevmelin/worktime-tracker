@@ -11,7 +11,7 @@
 			<div v-for="time in filteredTimes[index + 1]" class="w-4/12 flex items-center justify-between">
 
         <div class="flex">
-          
+
           <!-- Delete -->
           <img src="../../../images/trash-icon-red.svg" 
             width="18" 
@@ -53,7 +53,7 @@ const globalStore = useGlobalStore()
 const filteredTimes = computed(() => {
 	const times = {}
 	globalStore.times.forEach(time => {
-		const getDay = moment(time.date).weekday()
+		const getDay = moment(time.date).isoWeekday()
 		if(!times[getDay]) times[getDay] = [time]
 		else times[getDay].push(time)
 	})
