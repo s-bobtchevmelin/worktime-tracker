@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WorkedPeriod;
+use App\Repositories\TagRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -15,11 +16,11 @@ class WorkedPeriodController extends Controller
             'date' => 'required|date',
             'start' => 'required|date_format:H:i:s',
             'end' => 'required|date_format:H:i:s',
-            'tag' => 'nullable|string'
+            'tag' => 'nullable|string',
         ]);
 
-        if($validator->fails()) {
-            return redirect('/dashboard')->withErrors($validator)->withInput();     
+        if ($validator->fails()) {
+            return redirect('/dashboard')->withErrors($validator)->withInput();
         }
     }
 
@@ -40,14 +41,16 @@ class WorkedPeriodController extends Controller
     {
         $this->validator($request);
 
-        $tag = ''; // call repository
-        
+        $userId = Auth::id();
+
+        $tag = TagRepository::getOrCreateTag($userId, $request->get('tag'));
+
         WorkedPeriod::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'date' => $request->get('date'),
             'start' => $request->get('start'),
             'end' => $request->get('end'),
-            'tag_id' => $tag->id
+            'tag_id' => $tag->id,
         ]);
 
         return redirect('/dashboard');
@@ -67,7 +70,7 @@ class WorkedPeriodController extends Controller
     public function destroy(int $id)
     {
         $period = WorkedPeriod::find($id);
-        if($period && $period->user_id === Auth::id()) {
+        if ($period && $period->user_id === Auth::id()) {
             WorkedPeriod::destroy($id);
         }
     }

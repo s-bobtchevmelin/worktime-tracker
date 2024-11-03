@@ -1,11 +1,24 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
+
+use App\Models\Tag;
+use Illuminate\Support\Facades\Log;
 
 class TagRepository
 {
-    public function xxx(string $tagLabel)
+    public static function getOrCreateTag(int $userId, string $tagLabel): Tag
     {
-        // get or create tag
+        $tag = Tag::where('user_id', $userId)->where('label', $tagLabel)->first();
+        
+        if(!$tag) {
+            $tag = Tag::create([
+                'label' => $tagLabel,
+                'color' => 'lightgrey',
+                'user_id' => $userId
+            ]);
+        }
+
+        return $tag;
     }
 }

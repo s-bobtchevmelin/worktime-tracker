@@ -56,7 +56,7 @@ const add = async () => {
       date: dbDateFormat(globalStore.activeWeek[0].clone().add(dayIndex, 'days')),
       start: data.start + ':00',
       end: data.end + ':00',
-      tag: tag
+      tag: tag.value
     }))
     .post('/workedPeriod', {
       onSuccess: async () => {
