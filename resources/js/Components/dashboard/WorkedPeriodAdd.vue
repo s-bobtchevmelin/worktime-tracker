@@ -1,15 +1,21 @@
 <template>
   <div class="mb-10">
-    <form @submit.prevent="add" class="flex items-center mt-3">
-      <span>Le</span>
-      <InputSelect v-model="day" :options="days" class="mx-3" dense></InputSelect>
-
-      <span>De</span>
-      <InputDefault v-model="form.start" type="time" class="mx-3" dense />
-      <span>à</span>
-      <InputDefault v-model="form.end" type="time" class="mx-3" dense />
+    <form @submit.prevent="add" class=" mt-3"> 
+      <div class="flex items-center mb-3">
+        <span>Le</span>
+        <InputSelect v-model="day" :options="days" class="mx-3 w-7/12 md:w-5/12" dense></InputSelect>
+      </div>
       
-      <SecondaryButton type="submit">Ajouter</SecondaryButton>
+      <div class="flex items-center">
+        <span>De</span>
+        <InputDefault v-model="form.start" type="time" class="mx-3" dense />
+        <span>à</span>
+        <InputDefault v-model="form.end" type="time" class="mx-3" dense />
+
+        <SecondaryButton type="submit" dense>
+          <img src="../../../images/add-icon.svg" width="18" style="max-width: unset;">
+        </SecondaryButton>
+      </div>
     </form>
 
     <div class="mt-3 text-red-600">
@@ -22,7 +28,6 @@
 import { ref } from 'vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import { useForm } from '@inertiajs/vue3';
-import moment from 'moment';
 import { dbDateFormat } from "@/Composables/dateTimesUtils"
 
 import SecondaryButton from '../SecondaryButton.vue';

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="globalStore.activeWeek.length > 0" class="flex items-center justify-center mb-8">
+  <div v-if="globalStore.activeWeek.length > 0" class="flex items-center justify-around md:justify-center mb-8 text-center">
     <!-- Previous week -->
-    <div @click="previousWeek" class="arrow-prev flex items-center justify-center">
+    <div @click="previousWeek" class="arrow-prev flex items-center justify-center mr-3">
       <div>{{ '<' }}</div>
     </div>
 
@@ -9,7 +9,7 @@
     <div>{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
 
     <!-- Next week -->
-    <div @click="nextWeek" class="arrow-next flex items-center justify-center">
+    <div @click="nextWeek" class="arrow-next flex items-center justify-center ml-3">
       <div>{{ '>' }}</div>
     </div>
   </div>
@@ -17,7 +17,6 @@
 
 <script setup>
 import { useGlobalStore } from '@/Stores/global-store';
-import moment from 'moment';
 import {onMounted, ref} from "vue"
 import { defaultDateFormat } from "@/Composables/dateTimesUtils"
 
@@ -51,7 +50,6 @@ onMounted(async () => {
   height: 20px;
   font-size: large;
   font-weight: 500;
-  margin: 0 2rem;
   cursor: pointer;
 }
 </style>
