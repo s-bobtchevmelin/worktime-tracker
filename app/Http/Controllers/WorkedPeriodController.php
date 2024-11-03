@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WorkedPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Inertia\Inertia;
-use Ramsey\Uuid\Type\Integer;
 
 class WorkedPeriodController extends Controller
 {
@@ -18,6 +15,7 @@ class WorkedPeriodController extends Controller
             'date' => 'required|date',
             'start' => 'required|date_format:H:i:s',
             'end' => 'required|date_format:H:i:s',
+            'tag' => 'nullable|string'
         ]);
 
         if($validator->fails()) {
@@ -41,23 +39,18 @@ class WorkedPeriodController extends Controller
     public function store(Request $request)
     {
         $this->validator($request);
+
+        $tag = ''; // call repository
         
         WorkedPeriod::create([
             'user_id' => Auth::id(),
             'date' => $request->get('date'),
             'start' => $request->get('start'),
-            'end' => $request->get('end')
+            'end' => $request->get('end'),
+            'tag_id' => $tag->id
         ]);
 
         return redirect('/dashboard');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(WorkedPeriod $workedPeriod)
-    {
-        //
     }
 
     /**

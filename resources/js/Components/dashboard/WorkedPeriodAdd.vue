@@ -3,7 +3,8 @@
     <form @submit.prevent="add" class=" mt-3"> 
       <div class="flex items-center mb-3">
         <span>Le</span>
-        <InputSelect v-model="day" :options="days" class="mx-3 w-7/12 md:w-5/12" dense></InputSelect>
+        <InputSelect v-model="day" :options="days" class="mx-3 w-5/12 md:w-6/12" dense></InputSelect>
+        <Tagger v-model="tag" :tags="tags" class="w-6/12 md:w-7/12"></Tagger>
       </div>
       
       <div class="flex items-center">
@@ -25,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import { useForm } from '@inertiajs/vue3';
 import { dbDateFormat } from "@/Composables/dateTimesUtils"
@@ -33,11 +34,13 @@ import { dbDateFormat } from "@/Composables/dateTimesUtils"
 import SecondaryButton from '../SecondaryButton.vue';
 import InputDefault from '../InputDefault.vue';
 import InputSelect from '../InputSelect.vue';
+import Tagger from '../Tagger.vue';
 
-const props = defineProps({days: Array, errors: Object})
+const props = defineProps({days: Array, errors: Object, tags: Array})
 const globalStore = useGlobalStore()
 
 const day = ref(null)
+const tag = ref(null)
 const form = useForm({
   start: null,
   end: null
@@ -52,7 +55,8 @@ const add = async () => {
     .transform(data => ({
       date: dbDateFormat(globalStore.activeWeek[0].clone().add(dayIndex, 'days')),
       start: data.start + ':00',
-      end: data.end + ':00'
+      end: data.end + ':00',
+      tag: tag
     }))
     .post('/workedPeriod', {
       onSuccess: async () => {

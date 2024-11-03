@@ -8,7 +8,7 @@
 
                 <div>
                     <!-- ADD PERIOD FORM -->
-                    <WorkedPeriodAdd :days="days" />
+                    <WorkedPeriodAdd :days="days" :tags="tags" />
 
                     <!-- PERIODS LIST -->
                     <WorkedPeriodList :days="days" />
@@ -28,6 +28,8 @@ import WorkedPeriodAdd from '@/Components/dashboard/WorkedPeriodAdd.vue';
 import WorkedPeriodList from '@/Components/dashboard/WorkedPeriodList.vue';
 import WeekSelector from '@/Components/dashboard/WeekSelector.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+
+const props = defineProps({tags: Array})
 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 const boxCSS = "xl:col-span-6 bg-white py-3 md:py-5 px-4 md:px-8 rounded-xl mx-2"

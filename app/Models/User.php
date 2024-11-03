@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\WorkedPeriod;
+use App\Models\Tag;
 
 class User extends Authenticatable
 {
@@ -63,8 +65,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function periodsWorked()
+    public function workedPeriods()
     {
-        return $this->hasMany(PeriodWorked::class);
+        return $this->hasMany(WorkedPeriod::class);
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
     }
 }

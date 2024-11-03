@@ -11,6 +11,8 @@ defineEmits(['update:modelValue']);
 
 const input = ref(null);
 
+const isString = (option) => typeof option === 'string'
+
 onMounted(() => {
     if (input.value.hasAttribute('autofocus')) {
         input.value.focus();
@@ -28,7 +30,9 @@ defineExpose({ focus: () => input.value.focus() });
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
     >
-        <option v-for="(option, index) in options">{{ option }}</option>
+        <option v-for="(option, index) in options" :value="isString(option) ? option : option.value">
+            {{ isString(option) ? option : option.label }}
+        </option>
     </select>
 </template>
 
