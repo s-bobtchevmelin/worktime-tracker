@@ -14,7 +14,7 @@ class TagRepository
         if(!$tag) {
             $tag = Tag::create([
                 'label' => $tagLabel,
-                'color' => 'primary',
+                'color' => 'grey',
                 'user_id' => $userId
             ]);
         }
