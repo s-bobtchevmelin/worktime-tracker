@@ -22,7 +22,7 @@
         </nav>
       </header>
 
-      <main class="p-20 flex items-center justify-center bg-white rounded-xl mx-auto" style="width: 66%;">
+      <main class="p-20 flex items-center justify-center bg-white rounded-xl mx-auto" style="width: 66%; max-width: 850px;">
         <div class="w-full flex justify-between">
           <img src="../../images/welcome-clock.svg" width="300" alt="">
           <div class="ml-10 py-10 flex flex-col justify-around">
