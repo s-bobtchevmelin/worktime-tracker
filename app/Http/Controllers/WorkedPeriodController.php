@@ -43,15 +43,18 @@ class WorkedPeriodController extends Controller
         $this->validator($request);
 
         $userId = Auth::id();
+        $tag = $request->get('tag');
 
-        $tag = TagRepository::getOrCreateTag($userId, $request->get('tag'));
+        if($tag) {
+            $tag = TagRepository::getOrCreateTag($userId, $request->get('tag'));
+        }
 
         WorkedPeriod::create([
             'user_id' => $userId,
             'date' => $request->get('date'),
             'start' => $request->get('start'),
             'end' => $request->get('end'),
-            'tag_id' => $tag->id,
+            'tag_id' => $tag ? $tag->id : null,
         ]);
 
         return redirect('/dashboard');
