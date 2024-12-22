@@ -4,7 +4,7 @@
 
 <script setup>
 
-import colors from '../../config/tagColor'
+import colors from '../../../config/tagColor'
 
 const props = defineProps({ tag: Object })
 const color = colors[props.tag.color] ?? props.tag.color

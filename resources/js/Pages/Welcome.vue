@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import SecondaryButton from '@/Components/SecondaryButton.vue';
+import SecondaryButton from '@/Components/common/SecondaryButton.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({

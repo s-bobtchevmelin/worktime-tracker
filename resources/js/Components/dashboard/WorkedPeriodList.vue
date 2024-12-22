@@ -39,8 +39,8 @@
 
 <script setup>
 
-import SectionTitle from '@/Components/SectionTitle.vue';
-import Tag from '../Tag.vue';
+import SectionTitle from '@/Components/common/SectionTitle.vue';
+import Tag from '@/Components/common/Tag.vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
 import { computed } from 'vue';

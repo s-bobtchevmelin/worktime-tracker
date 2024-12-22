@@ -30,7 +30,7 @@ import { useGlobalStore } from '@/Stores/global-store';
 import { onMounted } from "vue"
 import { defaultDateFormat } from "@/Composables/dateTimesUtils"
 import { isMobile, isTablet } from '@/Composables/responsive';
-import SecondaryButton from '../SecondaryButton.vue';
+import SecondaryButton from '../common/SecondaryButton.vue';
 
 const globalStore = useGlobalStore()
 const iconSize = isMobile || isTablet ? '36' : '24';

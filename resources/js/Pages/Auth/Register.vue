@@ -1,12 +1,12 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import InputDefault from '@/Components/InputDefault.vue';
+import AuthenticationCard from '@/Components/common/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/common/AuthenticationCardLogo.vue';
+import Checkbox from '@/Components/common/Checkbox.vue';
+import InputError from '@/Components/common/InputError.vue';
+import InputLabel from '@/Components/common/InputLabel.vue';
+import PrimaryButton from '@/Components/common/PrimaryButton.vue';
+import InputDefault from '@/Components/common/InputDefault.vue';
 
 const form = useForm({
     name: '',

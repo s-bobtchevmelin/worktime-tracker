@@ -31,10 +31,10 @@ import { useGlobalStore } from '@/Stores/global-store';
 import { useForm } from '@inertiajs/vue3';
 import { dbDateFormat } from "@/Composables/dateTimesUtils"
 
-import SecondaryButton from '../SecondaryButton.vue';
-import InputDefault from '../InputDefault.vue';
-import InputSelect from '../InputSelect.vue';
-import Tagger from '../Tagger.vue';
+import SecondaryButton from '../common/SecondaryButton.vue';
+import InputDefault from '../common/InputDefault.vue';
+import InputSelect from '../common/InputSelect.vue';
+import Tagger from '../common/Tagger.vue';
 
 const props = defineProps({days: Array, errors: Object, tags: Array})
 const globalStore = useGlobalStore()
