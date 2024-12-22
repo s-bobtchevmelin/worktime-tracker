@@ -1,34 +1,46 @@
 <template>
-  <div v-if="globalStore.activeWeek.length > 0" class="flex items-center justify-around md:justify-center mb-8 text-center">
+  <div v-if="globalStore.activeWeek.length > 0" class="md:flex items-center justify-around mb-8">
 
-    <!-- Previous week -->
-    <img src="../../../images/arrowCircleRight-icon.svg" 
-      width="22" 
-      class="mr-2 cursor-pointer" 
-      style="transform: rotate(180deg);"
-      @click="previousWeek"
-    >
+    <SecondaryButton @click="resetWeek" class="w-full md:w-auto mb-4 md:mb-0">Semaine actuelle</SecondaryButton>
 
-    <!-- Current week -->
-    <div class="font-medium">{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
+    <div class="flex items-center justify-around md:justify-center text-center">
+      <!-- Previous week -->
+      <img src="../../../images/arrowCircleRight-icon.svg" 
+        :width="iconSize" 
+        class="mr-2 cursor-pointer" 
+        style="transform: rotate(180deg);"
+        @click="previousWeek"
+      >
 
-    <!-- Next week -->
-    <img src="../../../images/arrowCircleRight-icon.svg" 
-      width="22" 
-      class="ml-2 cursor-pointer" 
-      @click="nextWeek"
-    >
+      <!-- Current week -->
+      <div class="font-medium">{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
+
+      <!-- Next week -->
+      <img src="../../../images/arrowCircleRight-icon.svg" 
+        :width="iconSize" 
+        class="ml-2 cursor-pointer" 
+        @click="nextWeek"
+      >
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useGlobalStore } from '@/Stores/global-store';
-import {onMounted, ref} from "vue"
+import { onMounted } from "vue"
 import { defaultDateFormat } from "@/Composables/dateTimesUtils"
+import { isMobile, isTablet } from '@/Composables/responsive';
+import SecondaryButton from '../SecondaryButton.vue';
 
 const globalStore = useGlobalStore()
+const iconSize = isMobile || isTablet ? '36' : '24';
 
 const beautifulDate = (date) => defaultDateFormat(date)
+
+const resetWeek = async () => {
+  const currentWeek = globalStore.getWeek
+  await globalStore.updateActiveWeek(currentWeek)
+}
 
 const previousWeek = async () => {
   const start = globalStore.activeWeek[0].clone().subtract(7, 'days');
@@ -46,6 +58,7 @@ onMounted(async () => {
   const activeWeek = globalStore.getWeek;
   await globalStore.updateActiveWeek([activeWeek[0], activeWeek[1]])
 })
+
 </script>
 
 <style>

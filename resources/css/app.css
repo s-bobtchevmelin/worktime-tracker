@@ -9,3 +9,9 @@
 body, h1, h2, h3, h4, h5, h6 {
     color: #262626;
 }
+
+.link-style {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #6875f5;
+}
