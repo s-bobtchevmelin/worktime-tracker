@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h3 class="font-bold">Heures travaillées cette semaine :</h3>
+  <div class="flex">
+    <h3 class="font-bold mr-3">Heures travaillées cette semaine :</h3>
     <div>{{ calculateTimesCumul(globalStore.times) }}</div>
   </div>
 </template>

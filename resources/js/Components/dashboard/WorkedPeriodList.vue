@@ -8,7 +8,7 @@
 		</SectionTitle>
 
 		<div class="mb-1">
-			<div v-for="time in filteredTimes[index + 1]" class="w-8/12 lg:w-6/12 flex items-center">
+			<div v-for="time in filteredTimes[index + 1]" :key="'time-' + time.id" class="w-8/12 lg:w-6/12 flex items-center">
         <div class="flex mr-5">
 
           <!-- Delete -->
@@ -31,7 +31,7 @@
 		<div v-if="filteredTimes[index + 1]" class="italic">
 			Heures travaillées : {{ calculateTimesCumul(filteredTimes[index + 1]) }}
 		</div>
-  </div>
+	</div>
 </template>
 
 <script setup>

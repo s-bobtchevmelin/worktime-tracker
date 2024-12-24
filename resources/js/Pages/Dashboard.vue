@@ -15,10 +15,8 @@
         <!-- Total per week -->
         <div :class="'mb-3 lg:mb-0 ' + boxCSS"> 
           <StatsWeekTotal></StatsWeekTotal>
-        </div>
 
-        <div v-if="! isSmallDevice">
-          coucou
+          <StatsWeekTotalPerTag v-if="! isSmallDevice" :tags="tags"></StatsWeekTotalPerTag>
         </div>
       </div>
       
@@ -34,6 +32,7 @@ import WeekSelector from '@/Components/dashboard/WeekSelector.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import StatsWeekTotal from '@/Components/dashboard/StatsWeekTotal.vue';
 import { isSmallDevice } from '@/Composables/responsive';
+import StatsWeekTotalPerTag from '@/Components/dashboard/StatsWeekTotalPerTag.vue';
 
 const props = defineProps({tags: Array})
 
