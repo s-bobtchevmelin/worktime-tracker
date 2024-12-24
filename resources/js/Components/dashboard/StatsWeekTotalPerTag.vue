@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3">
     <div v-if="calculateTotalTimeForTag(null) !== '0h'">
-      <span class="italic">Sans tags</span> : <span>{{ calculateTotalTimeForTag(null) }}</span>
+      <span>Sans tags</span> : <span>{{ calculateTotalTimeForTag(null) }}</span>
     </div>
 
     <div v-for="tag in tags" :key="'tag-' + tag.label">
