@@ -42,6 +42,6 @@ const boxCSS = "bg-white py-3 lg:py-5 px-4 lg:px-8 rounded-xl mx-2"
 
 <style>
 .dashboard {
-  height: 92vh;
+  min-height: 92vh;
 }
 </style>
