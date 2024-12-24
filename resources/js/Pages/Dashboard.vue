@@ -1,23 +1,27 @@
 <template>
   <AppLayout title="Dashboard">
-    <div class="grid grid-cols-12 md:px-6 py-2 md:py-8">
+    <div class="dashboard flex flex-col lg:flex-row lg:px-6 py-2 lg:py-8">
 
-        <!-- WEEK -->
-      <div :class="'order-2 md:order-1 col-span-12 md:col-span-7 ' + boxCSS">
+      <!-- LEFT PANEL - Week -->
+      <div :class="'lg:w-1/2 order-2 lg:order-1 ' + boxCSS">
         <WeekSelector />
+        <WorkedPeriodAdd :days="days" :tags="tags" />
+        <WorkedPeriodList :days="days" />
+      </div>
 
-        <div>
-          <!-- ADD PERIOD FORM -->
-          <WorkedPeriodAdd :days="days" :tags="tags" />
+      <!-- RIGTH PANEL - Stats preview -->
+      <div class="lg:w-1/2 order-1 lg:order-2">
+        
+        <!-- Total per week -->
+        <div :class="'mb-3 lg:mb-0 ' + boxCSS"> 
+          <StatsWeekTotal></StatsWeekTotal>
+        </div>
 
-          <!-- PERIODS LIST -->
-          <WorkedPeriodList :days="days" />
+        <div v-if="! isSmallDevice">
+          coucou
         </div>
       </div>
-
-      <div :class="'order-1 md:order-2 col-span-12 md:col-span-5 mb-2 md:mb-0' + boxCSS">
-        coucou
-      </div>
+      
     </div>
   </AppLayout>
 </template>
@@ -28,9 +32,17 @@ import WorkedPeriodAdd from '@/Components/dashboard/WorkedPeriodAdd.vue';
 import WorkedPeriodList from '@/Components/dashboard/WorkedPeriodList.vue';
 import WeekSelector from '@/Components/dashboard/WeekSelector.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import StatsWeekTotal from '@/Components/dashboard/StatsWeekTotal.vue';
+import { isSmallDevice } from '@/Composables/responsive';
 
 const props = defineProps({tags: Array})
 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
-const boxCSS = "xl:col-span-6 bg-white py-3 md:py-5 px-4 md:px-8 rounded-xl mx-2"
+const boxCSS = "bg-white py-3 lg:py-5 px-4 lg:px-8 rounded-xl mx-2"
 </script>
+
+<style>
+.dashboard {
+  height: 92vh;
+}
+</style>

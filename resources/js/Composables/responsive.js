@@ -1,3 +1,5 @@
+export const isSmallDevice = window.screen.width <= 1024;
+
 export const isMobile = window.screen.width <= 768;
 
 export const isTablet = window.screen.width > 768 && window.screen.width <= 1024;

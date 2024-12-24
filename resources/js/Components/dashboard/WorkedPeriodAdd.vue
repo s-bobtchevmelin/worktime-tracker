@@ -3,8 +3,8 @@
     <form @submit.prevent="add" class=" mt-3"> 
       <div class="flex items-center mb-3">
         <span>Le</span>
-        <InputSelect v-model="day" :options="days" class="mx-3 w-5/12 md:w-6/12" dense></InputSelect>
-        <Tagger v-model="tag" :tags="tags" class="w-6/12 md:w-7/12"></Tagger>
+        <InputSelect v-model="day" :options="days" class="mx-3 w-5/12 lg:w-6/12" dense></InputSelect>
+        <Tagger v-model="tag" :tags="tags" class="w-6/12 lg:w-7/12"></Tagger>
       </div>
       
       <div class="flex items-center">

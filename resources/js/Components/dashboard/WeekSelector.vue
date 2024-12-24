@@ -1,9 +1,9 @@
 <template>
-  <div v-if="globalStore.activeWeek.length > 0" class="md:flex items-center justify-around mb-8">
+  <div v-if="globalStore.activeWeek.length > 0" class="lg:flex items-center justify-around mb-8">
 
-    <SecondaryButton @click="resetWeek" class="w-full md:w-auto mb-4 md:mb-0">Semaine actuelle</SecondaryButton>
+    <SecondaryButton @click="resetWeek" class="w-full lg:w-auto mb-4 lg:mb-0 lg:mr-3">Semaine actuelle</SecondaryButton>
 
-    <div class="flex items-center justify-around md:justify-center text-center">
+    <div class="flex items-center justify-around lg:justify-center text-center">
       <!-- Previous week -->
       <img src="../../../images/arrowCircleRight-icon.svg" 
         :width="iconSize" 

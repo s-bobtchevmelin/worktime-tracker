@@ -1,5 +1,5 @@
 <template>
-    <div class="text-white rounded-full text-xs text-center" :style="`background-color: ${color};`">{{ tag.label }}</div>
+    <div class="text-white rounded-full text-xs text-center px-2" :style="`background-color: ${color};`">{{ tag.label }}</div>
 </template>
 
 <script setup>

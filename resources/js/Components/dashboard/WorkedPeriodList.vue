@@ -8,9 +8,8 @@
 		</SectionTitle>
 
 		<div class="mb-1">
-			<div v-for="time in filteredTimes[index + 1]" class="w-4/12 flex items-center justify-between">
-
-        <div class="flex">
+			<div v-for="time in filteredTimes[index + 1]" class="w-8/12 lg:w-6/12 flex items-center">
+        <div class="flex mr-5">
 
           <!-- Delete -->
           <img src="../../../images/trash-icon-red.svg" 
@@ -24,15 +23,13 @@
         </div>
 
         <!-- Tag -->
-         <div class="w-3/12">
-          <tag v-if="time.tag" :tag="time.tag"></tag>
-         </div>
+        <tag v-if="time.tag" :tag="time.tag"></tag>
          
-			</div>
+		  </div>
 		</div>
 
 		<div v-if="filteredTimes[index + 1]" class="italic">
-			Heures travaillées : {{ calculateWorkedHoursForADay(filteredTimes[index + 1]) }}
+			Heures travaillées : {{ calculateTimesCumul(filteredTimes[index + 1]) }}
 		</div>
   </div>
 </template>
@@ -44,7 +41,7 @@ import Tag from '@/Components/common/Tag.vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
 import { computed } from 'vue';
-import { defaultTimeFormat } from '@/Composables/dateTimesUtils'
+import { calculateTimesCumul, defaultTimeFormat } from '@/Composables/dateTimesUtils'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps(['days'])
@@ -63,20 +60,6 @@ const filteredTimes = computed(() => {
 const getDayOfWeek = (index) => {
 	const date = globalStore.activeWeek[0].clone().add(index, 'days');
 	return date.format('DD')
-}
-
-const calculateWorkedHoursForADay = (dayTimes) => {
-	let total = 0
-
-	dayTimes.forEach(period => {
-		const start = moment(period.start, "HH:mm")
-		const end = moment(period.end, "HH:mm")
-		const duration = moment.duration(end.diff(start))
-		total += duration._milliseconds
-	});
-
-	const totalDuration = moment.duration(total)
-	return totalDuration.hours()  + "h" +  (totalDuration.minutes() || '');
 }
 
 const deletePeriod = async(time) => {
