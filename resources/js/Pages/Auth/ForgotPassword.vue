@@ -1,7 +1,7 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/common/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/common/AuthenticationCardLogo.vue';
+import ApplicationLogo from '@/Components/common/ApplicationLogo.vue';
 import InputError from '@/Components/common/InputError.vue';
 import InputLabel from '@/Components/common/InputLabel.vue';
 import PrimaryButton from '@/Components/common/PrimaryButton.vue';
@@ -25,7 +25,7 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <ApplicationLogo />
         </template>
 
         <div class="mb-4 text-sm text-gray-600">

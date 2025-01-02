@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/common/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/common/AuthenticationCardLogo.vue';
+import ApplicationLogo from '@/Components/common/ApplicationLogo.vue';
 import PrimaryButton from '@/Components/common/PrimaryButton.vue';
 
 const props = defineProps({
@@ -23,7 +23,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <ApplicationLogo />
         </template>
 
         <div class="mb-4 text-sm text-gray-600">
