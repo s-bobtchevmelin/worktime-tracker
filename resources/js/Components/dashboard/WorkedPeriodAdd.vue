@@ -14,7 +14,7 @@
         <InputDefault v-model="form.end" type="time" class="mx-3" dense />
 
         <SecondaryButton type="submit" dense>
-          <img src="../../../images/add-icon.svg" width="18" style="max-width: unset;">
+          <img src="../../../images/icons/add-icon.svg" width="18" style="max-width: unset;">
         </SecondaryButton>
       </div>
     </form>

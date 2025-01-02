@@ -1,6 +1,6 @@
 <template>
     <div class="flex item-center">
-			<img src="../../../images/tag-icon.svg" width="18" style="max-width: unset;">
+			<img src="../../../images/icons/tag-icon.svg" width="18" style="max-width: unset;">
 
 			<InputDefault id="tagInput" 
 				:value="modelValue"

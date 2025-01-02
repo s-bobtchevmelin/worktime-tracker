@@ -5,7 +5,7 @@
 
     <div class="flex items-center justify-around lg:justify-center text-center">
       <!-- Previous week -->
-      <img src="../../../images/arrowCircleRight-icon.svg" 
+      <img src="../../../images/icons/arrowCircleRight-icon.svg" 
         :width="iconSize" 
         class="mr-2 cursor-pointer" 
         style="transform: rotate(180deg);"
@@ -16,7 +16,7 @@
       <div class="font-medium">{{`Semaine du ${beautifulDate(globalStore.activeWeek[0])} au ${beautifulDate(globalStore.activeWeek[1])}`}}</div>
 
       <!-- Next week -->
-      <img src="../../../images/arrowCircleRight-icon.svg" 
+      <img src="../../../images/icons/arrowCircleRight-icon.svg" 
         :width="iconSize" 
         class="ml-2 cursor-pointer" 
         @click="nextWeek"

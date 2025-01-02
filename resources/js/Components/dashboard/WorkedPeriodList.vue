@@ -12,7 +12,7 @@
         <div class="flex mr-5">
 
           <!-- Delete -->
-          <img src="../../../images/trash-icon-red.svg" 
+          <img src="../../../images/icons/trash-icon-red.svg" 
             width="18" 
             class="col-span-1 mr-2 cursor-pointer" 
             @click="deletePeriod(time)"
