@@ -10,9 +10,7 @@ npm install
 
 php artisan config:clear
 
-php artisan key:generate
-
-php artisan migrate
+php artisan migrate -n
 
 php artisan route:clear
 
