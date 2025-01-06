@@ -34,7 +34,7 @@
       </main>
 
       <footer class="text-center text-sm text-black">
-        <a href="https://sarah-bobtchev-melin.com" target="_blank">Sarah Bobtchev Melin - 2024</a>
+        <a href="https://sarah-bobtchev-melin.com" target="_blank">Sarah Bobtchev Melin - {{ moment().year() }}</a>
       </footer>
     </div>
   </div>
@@ -43,6 +43,7 @@
 <script setup>
 import SecondaryButton from '@/Components/common/SecondaryButton.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import moment from 'moment';
 
 defineProps({
     canLogin: { type: Boolean },
