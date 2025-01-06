@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import { useForm } from '@inertiajs/vue3';
 import { dbDateFormat } from "@/Composables/dateTimesUtils"
@@ -47,15 +47,13 @@ const form = useForm({
 })
 
 const add = async () => {
-  if(!form.start || !form.end) return;
-
   const dayIndex = props.days.indexOf(day.value)
   
   form
     .transform(data => ({
       date: dbDateFormat(globalStore.activeWeek[0].clone().add(dayIndex, 'days')),
-      start: data.start + ':00',
-      end: data.end + ':00',
+      start: data.start ? data.start + ':00' : null,
+      end: data.end ? data.end + ':00' : null,
       tag: tag.value
     }))
     .post('/workedPeriod', {

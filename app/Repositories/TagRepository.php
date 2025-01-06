@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Tag;
-use Illuminate\Support\Facades\Log;
 
 class TagRepository
 {
