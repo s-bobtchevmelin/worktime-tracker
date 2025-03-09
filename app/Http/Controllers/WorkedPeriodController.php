@@ -39,9 +39,31 @@ class WorkedPeriodController extends Controller
         ]);
     }
 
-    public function update(Request $request, WorkedPeriod $workedPeriod)
+    public function update(Request $request, WorkedPeriod $workedPeriod): WorkedPeriod
     {
-        //
+        $userId = Auth::id();
+        $workedPeriod = WorkedPeriod::find($workedPeriod->id);
+        $tag = $request->get('tag');
+
+        // Get worked period associate tag
+        $workedPeriodTag = $workedPeriod->any('tag');
+
+        // Update tag
+        if($tag && $workedPeriodTag) {
+            $workedPeriod->tag = TagRepository::getOrCreateTag($userId, $tag);
+        }
+
+        // Update period
+        if ($workedPeriod) {
+            $workedPeriod->date = $request->get('date');
+            $workedPeriod->start = $request->get('start');
+            $workedPeriod->end = $request->get('end');
+        }
+
+        // Save item
+        $workedPeriod->save();
+        
+        return $workedPeriod;
     }
 
     public function destroy(WorkedPeriod $period)
