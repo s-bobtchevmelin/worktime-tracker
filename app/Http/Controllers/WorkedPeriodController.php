@@ -48,9 +48,12 @@ class WorkedPeriodController extends Controller
         // Get worked period associate tag
         $workedPeriodTag = $workedPeriod->any('tag');
 
-        // Update tag
-        if($tag && $workedPeriodTag) {
-            $workedPeriod->tag = TagRepository::getOrCreateTag($userId, $tag);
+        // Update workedPeriod tag
+        if($tag && $workedPeriodTag) { // Case with tag
+            $tag = TagRepository::getOrCreateTag($userId, $tag);
+            $workedPeriod->tag = $tag ? $tag : null;
+        } else { // Case without tag
+            $workedPeriod->tag = null;
         }
 
         // Update period
