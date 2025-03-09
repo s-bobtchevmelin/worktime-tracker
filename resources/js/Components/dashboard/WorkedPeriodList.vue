@@ -145,7 +145,7 @@ const saveEdit = async (time) => {
     tag: editForm.value.tag
   });
 
-  form.post(`/workedPeriod/update/${time.id}`, {
+  form.put(`/workedPeriod/update/${time.id}`, {
     onSuccess: async () => {
       await globalStore.fetchTimes();
       editingId.value = null;
