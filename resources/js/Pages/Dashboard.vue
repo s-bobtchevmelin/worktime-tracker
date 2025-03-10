@@ -5,7 +5,7 @@
       <!-- LEFT PANEL - Week -->
       <div :class="'lg:w-1/2 order-2 lg:order-1 ' + boxCSS">
         <WeekSelector />
-        <WorkedPeriodAdd :days="days" :tags="tags" />
+        <WorkedPeriodAdd :days="days" />
         <WorkedPeriodList :days="days" />
       </div>
 
@@ -16,7 +16,7 @@
         <div :class="'mb-3 lg:mb-0 ' + boxCSS"> 
           <StatsWeekTotal></StatsWeekTotal>
 
-          <StatsWeekTotalPerTag v-if="! isSmallDevice" :tags="tags"></StatsWeekTotalPerTag>
+          <StatsWeekTotalPerTag v-if="! isSmallDevice"></StatsWeekTotalPerTag>
         </div>
       </div>
       
@@ -33,8 +33,13 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import StatsWeekTotal from '@/Components/dashboard/StatsWeekTotal.vue';
 import { isSmallDevice } from '@/Composables/responsive';
 import StatsWeekTotalPerTag from '@/Components/dashboard/StatsWeekTotalPerTag.vue';
+import { useGlobalStore } from '@/Stores/global-store';
 
 const props = defineProps({tags: Array})
+
+// Store tags globally
+const globalStore = useGlobalStore()
+globalStore.updateTags(props.tags);
 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 const boxCSS = "bg-white py-3 lg:py-5 px-4 lg:px-8 rounded-xl mx-2"

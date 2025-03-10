@@ -1,5 +1,7 @@
 <template>
-  <div v-if="globalStore.activeWeek.length > 0" v-for="(day, index) in days" :key="day" class="mb-3">
+	<div v-if="globalStore.activeWeek.length > 0" v-for="(day, index) in days" :key="day" class="mb-3">
+
+		<!-- Week day label -->
 		<SectionTitle>
 			<template #title>
 				<span>{{ day }}</span>
@@ -7,29 +9,30 @@
 			</template>
 		</SectionTitle>
 
+		<!-- Periods list -->
 		<div class="mb-1">
-			<div v-for="time in filteredTimes[index + 1]" :key="'time-' + time.id" class="w-8/12 lg:w-6/12 flex items-center">
-        <div class="flex mr-5">
+			<div v-for="period in filteredPeriods[index + 1]" :key="'period-' + period.id" class="w-8/12 lg:w-6/12 flex items-center">
+				<div class="flex mr-5">
 
-          <!-- Delete -->
-          <img src="../../../images/icons/trash-icon-red.svg" 
-            width="18" 
-            class="col-span-1 mr-2 cursor-pointer" 
-            @click="deletePeriod(time)"
-          >
+					<!-- Delete -->
+					<img src="../../../images/icons/trash-icon-red.svg" 
+						width="18" 
+						class="col-span-1 mr-2 cursor-pointer" 
+						@click="deletePeriod(period)"
+					>
 
-          <!-- Time -->
-          <span >{{ defaultTimeFormat(time.start) }} - {{ defaultTimeFormat(time.end) }}</span>
-        </div>
+					<!-- Time -->
+					<span >{{ defaultTimeFormat(period.start) }} - {{ defaultTimeFormat(period.end) }}</span>
+				</div>
 
-        <!-- Tag -->
-        <tag v-if="time.tag" :tag="time.tag"></tag>
-         
-		  </div>
+				<!-- Tag -->
+				<tag v-if="period.tag" :tag="period.tag"></tag>
+					
+			</div>
 		</div>
 
-		<div v-if="filteredTimes[index + 1]" class="italic">
-			Heures travaillées : {{ calculateTimesCumul(filteredTimes[index + 1]) }}
+		<div v-if="filteredPeriods[index + 1]" class="italic">
+			Heures travaillées : {{ calculateTimesCumul(filteredPeriods[index + 1]) }}
 		</div>
 	</div>
 </template>
@@ -47,14 +50,14 @@ import { useForm } from '@inertiajs/vue3'
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
 
-const filteredTimes = computed(() => {
-	const times = {}
-	globalStore.times.forEach(time => {
-		const getDay = moment(time.date).isoWeekday()
-		if(!times[getDay]) times[getDay] = [time]
-		else times[getDay].push(time)
+const filteredPeriods = computed(() => {
+	const periods = {}
+	globalStore.periods.forEach(period => {
+		const getDay = moment(period.date).isoWeekday()
+		if(!periods[getDay]) periods[getDay] = [period]
+		else periods[getDay].push(period)
 	})
-	return times 
+	return periods 
 })
 
 const getDayOfWeek = (index) => {
@@ -62,11 +65,11 @@ const getDayOfWeek = (index) => {
 	return date.format('DD')
 }
 
-const deletePeriod = async(time) => {
+const deletePeriod = async(period) => {
 	const form = useForm({})
-	form.delete(`/workedPeriod/${time.id}`, {
+	form.delete(`/workedPeriod/${period.id}`, {
 		onSuccess: async () => {
-			await globalStore.fetchTimes()
+			await globalStore.fetchPeriods()
 		}
 	})
 }

@@ -3,9 +3,10 @@ import moment from 'moment';
 import { dbDateFormat } from "@/Composables/dateTimesUtils"
 
 export const useGlobalStore = defineStore('global', {
-  state: () => ({ 
+  state: () => ({
     activeWeek: [],
-    times: []
+    periods: [],
+    tags: []
   }),
   getters: {
     getWeek: () => {
@@ -16,15 +17,18 @@ export const useGlobalStore = defineStore('global', {
     },
   },
   actions: {
-    async fetchTimes () {
+    async fetchPeriods() {
       const start = dbDateFormat(this.activeWeek[0])
       const end = dbDateFormat(this.activeWeek[1])
       const response = await axios.get(`/workedPeriod/week/${start}/${end}`)
-      this.times = response.data
+      this.periods = response.data
     },
     async updateActiveWeek(value) {
       this.activeWeek = value;
-      await this.fetchTimes()
+      await this.fetchPeriods()
+    },
+    updateTags(value) {
+      this.tags = value;
     },
   },
 })
