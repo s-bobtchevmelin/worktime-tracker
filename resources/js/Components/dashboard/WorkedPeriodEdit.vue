@@ -43,6 +43,7 @@
 import { useForm } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import { useGlobalStore } from '@/Stores/global-store';
+import { dbTimeFormat } from "@/Composables/dateTimesUtils"
 
 const props = defineProps({
   time: {
@@ -74,12 +75,12 @@ onMounted(() => {
 const save = async () => {
   const inertiaForm = useForm({
     date: form.value.date,
-    start: form.value.start,
-    end: form.value.end,
+    start: dbTimeFormat(form.value.start),
+    end: dbTimeFormat(form.value.end),
     tag: form.value.tag
   });
 
-  inertiaForm.put(`/workedPeriod/${props.time.id}`, {
+  inertiaForm.put(`/workedPeriod/update/${props.time.id}`, {
     onSuccess: async () => {
       await globalStore.fetchPeriods();
       emit('saved');

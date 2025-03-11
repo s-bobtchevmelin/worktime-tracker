@@ -8,6 +8,10 @@ export function dbDateFormat(date) {
   return date.format('YYYY-MM-DD')
 }
 
+export function dbTimeFormat(time) {
+  return moment(time, 'HH:mm:ss').format('HH:mm:ss')
+}
+
 export function getTimeFormat(time) {
   return moment(time, "HH:mm")
 }

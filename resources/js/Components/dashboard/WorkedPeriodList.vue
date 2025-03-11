@@ -32,7 +32,9 @@
           <span>{{ defaultTimeFormat(period.start) }} - {{ defaultTimeFormat(period.end) }}</span>
 
           <!-- Tag -->
-          <tag v-if="period.tag" :tag="period.tag"></tag>
+          <div class="flex items-center ml-2">
+            <tag v-if="period.tag" :tag="period.tag"></tag>
+          </div>
         </div>
 
         <!-- Edition Mode -->
@@ -63,8 +65,6 @@ import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps(['days']);
 const globalStore = useGlobalStore();
-
-// Edition States
 const editingId = ref(null);
 
 const filteredPeriods = computed(() => {
