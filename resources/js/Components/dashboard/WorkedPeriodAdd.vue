@@ -4,7 +4,7 @@
       <div class="flex items-center mb-3">
         <span>Le</span>
         <InputSelect v-model="day" :options="days" class="mx-3 w-5/12 lg:w-6/12" dense></InputSelect>
-        <Tagger v-model="tag" :tags="globalStore.tags" class="w-6/12 lg:w-7/12"></Tagger>
+        <Tagger v-model="form.tag" :tags="globalStore.tags" class="w-6/12 lg:w-7/12"></Tagger>
       </div>
       
       <div class="flex items-center">
@@ -29,7 +29,7 @@
 import { ref } from 'vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import { useForm } from '@inertiajs/vue3';
-import { dbDateFormat } from "@/Composables/dateTimesUtils"
+import { dbDateFormat, dbTimeFormat } from "@/Composables/dateTimesUtils"
 
 import SecondaryButton from '../common/SecondaryButton.vue';
 import InputDefault from '../common/InputDefault.vue';
@@ -40,10 +40,10 @@ const props = defineProps({days: Array, errors: Object})
 const globalStore = useGlobalStore()
 
 const day = ref(null)
-const tag = ref(null)
 const form = useForm({
   start: null,
-  end: null
+  end: null,
+  tag: null
 })
 
 const add = async () => {
@@ -52,9 +52,9 @@ const add = async () => {
   form
     .transform(data => ({
       date: dbDateFormat(globalStore.activeWeek[0].clone().add(dayIndex, 'days')),
-      start: data.start ? data.start + ':00' : null,
-      end: data.end ? data.end + ':00' : null,
-      tag: tag.value
+      start: dbTimeFormat(data.start),
+      end: dbTimeFormat(data.end),
+      tag: data.tag
     }))
     .post('/workedPeriod', {
       onSuccess: async () => {

@@ -1,11 +1,23 @@
 import moment from 'moment';
 
 export function defaultDateFormat(date) {
-  return date.format('DD/MM/YYYY')
+  return date ? date.format('DD/MM/YYYY') : null
+}
+
+export function dbTimeFormat(time) {
+
+  if (!time) return null
+
+  // Time already in correct format, skip formatting
+  if (/^\d{2}:\d{2}:\d{2}$/.test(time)) {
+    return time
+  }
+
+  return time + ':00'
 }
 
 export function dbDateFormat(date) {
-  return date.format('YYYY-MM-DD')
+  return date ? date.format('YYYY-MM-DD') : null
 }
 
 export function getTimeFormat(time) {

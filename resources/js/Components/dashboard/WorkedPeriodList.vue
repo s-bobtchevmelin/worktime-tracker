@@ -11,8 +11,9 @@
 
 		<!-- Periods list -->
 		<div class="mb-1">
-			<div v-for="period in filteredPeriods[index + 1]" :key="'period-' + period.id" class="w-8/12 lg:w-6/12 flex items-center">
-				<div class="flex mr-5">
+			<div v-for="period in filteredPeriods[index + 1]" :key="'period-' + period.id">
+				<div class="w-8/12 lg:w-6/12 flex items-center">
+					<div class="flex mr-5">
 
 					<!-- Delete -->
 					<img src="../../../images/icons/trash-icon-red.svg" 
@@ -23,11 +24,13 @@
 
 					<!-- Time -->
 					<span >{{ defaultTimeFormat(period.start) }} - {{ defaultTimeFormat(period.end) }}</span>
+					</div>
+
+					<!-- Tag -->
+					<tag v-if="period.tag" :tag="period.tag"></tag>
 				</div>
 
-				<!-- Tag -->
-				<tag v-if="period.tag" :tag="period.tag"></tag>
-					
+				<WorkedPeriodUpdate :period="period"/>
 			</div>
 		</div>
 
@@ -46,6 +49,7 @@ import moment from 'moment';
 import { computed } from 'vue';
 import { calculateTimesCumul, defaultTimeFormat } from '@/Composables/dateTimesUtils'
 import { useForm } from '@inertiajs/vue3'
+import WorkedPeriodUpdate from './WorkedPeriodUpdate.vue';
 
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
