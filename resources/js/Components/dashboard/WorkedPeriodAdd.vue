@@ -4,7 +4,7 @@
       <div class="flex items-center mb-3">
         <span>Le</span>
         <InputSelect v-model="day" :options="days" class="mx-3 w-5/12 lg:w-6/12" dense></InputSelect>
-        <Tagger v-model="tag" :tags="tags" class="w-6/12 lg:w-7/12"></Tagger>
+        <Tagger v-model="tag" :tags="globalStore.tags" class="w-6/12 lg:w-7/12"></Tagger>
       </div>
       
       <div class="flex items-center">
@@ -36,7 +36,7 @@ import InputDefault from '../common/InputDefault.vue';
 import InputSelect from '../common/InputSelect.vue';
 import Tagger from '../common/Tagger.vue';
 
-const props = defineProps({days: Array, errors: Object, tags: Array})
+const props = defineProps({days: Array, errors: Object})
 const globalStore = useGlobalStore()
 
 const day = ref(null)
@@ -58,7 +58,7 @@ const add = async () => {
     }))
     .post('/workedPeriod', {
       onSuccess: async () => {
-        await globalStore.fetchTimes()
+        await globalStore.fetchPeriods()
         form.reset()
       }
     })

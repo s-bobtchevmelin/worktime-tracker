@@ -67,10 +67,10 @@ class WorkedPeriodController extends Controller
 
     public function destroy(WorkedPeriod $period)
     {
-        abort_if(!$period, 404, "La plage horaire indiquée n'existe pas.");
-
+        // Verify permissions
         $this->authorize('destroy', $period);
 
+        // Delete time
         $period->delete();
     }
 }

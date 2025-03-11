@@ -1,5 +1,7 @@
 <template>
   <div v-if="globalStore.activeWeek.length > 0" v-for="(day, index) in days" :key="day" class="mb-3">
+
+    <!-- Week day label -->
     <SectionTitle>
       <template #title>
         <span>{{ day }}</span>
@@ -7,43 +9,44 @@
       </template>
     </SectionTitle>
 
+    <!-- Periods list -->
     <div class="mb-1">
-      <div v-for="time in filteredTimes[index + 1]" :key="'time-' + time.id" class="w-8/12 lg:w-6/12 flex items-center">
+      <div v-for="period in filteredPeriods[index + 1]" :key="'period-' + period.id" class="w-8/12 lg:w-6/12 flex items-center">
         <!-- Normal Mode -->
-        <div v-if="!isEditing(time.id)" class="flex mr-5">
+        <div v-if="!isEditing(period.id)" class="flex mr-5">
           <!-- Delete -->
           <img src="../../../images/icons/trash-icon-red.svg" 
             width="18" 
             class="col-span-1 mr-2 cursor-pointer" 
-            @click="deletePeriod(time)"
+            @click="deletePeriod(period)"
           >
 
           <!-- Update -->
           <img src="../../../images/icons/edit-icon.svg"
             width="18"
             class="col-span-1 mr-2 cursor-pointer"
-            @click="startEditing(time)"
+            @click="startEditing(period)"
           >
 
           <!-- Time -->
-          <span>{{ defaultTimeFormat(time.start) }} - {{ defaultTimeFormat(time.end) }}</span>
+          <span>{{ defaultTimeFormat(period.start) }} - {{ defaultTimeFormat(period.end) }}</span>
 
           <!-- Tag -->
-          <tag v-if="time.tag" :tag="time.tag"></tag>
+          <tag v-if="period.tag" :tag="period.tag"></tag>
         </div>
 
         <!-- Edition Mode -->
         <WorkedPeriodEdit 
           v-else 
-          :time="time" 
+          :time="period" 
           @cancel="cancelEdit" 
           @saved="editingId = null"
         />
       </div>
     </div>
 
-    <div v-if="filteredTimes[index + 1]" class="italic">
-      Heures travaillées : {{ calculateTimesCumul(filteredTimes[index + 1]) }}
+    <div v-if="filteredPeriods[index + 1]" class="italic">
+      Heures travaillées : {{ calculateTimesCumul(filteredPeriods[index + 1]) }}
     </div>
   </div>
 </template>
@@ -64,15 +67,15 @@ const globalStore = useGlobalStore();
 // Edition States
 const editingId = ref(null);
 
-const filteredTimes = computed(() => {
-  const times = {};
-  globalStore.times.forEach(time => {
-    const getDay = moment(time.date).isoWeekday();
-    if(!times[getDay]) times[getDay] = [time];
-    else times[getDay].push(time);
-  });
-  return times;
-});
+const filteredPeriods = computed(() => {
+  const periods = {}
+  globalStore.periods.forEach(period => {
+    const getDay = moment(period.date).isoWeekday()
+    if(!periods[getDay]) periods[getDay] = [period]
+    else periods[getDay].push(period)
+  })
+  return periods 
+})
 
 const getDayOfWeek = (index) => {
   const date = globalStore.activeWeek[0].clone().add(index, 'days');
@@ -83,20 +86,20 @@ const isEditing = (id) => {
   return editingId.value === id;
 };
 
-const startEditing = (time) => {
-  editingId.value = time.id;
+const startEditing = (period) => {
+  editingId.value = period.id;
 };
 
 const cancelEdit = () => {
   editingId.value = null;
 };
 
-const deletePeriod = async(time) => {
-  const form = useForm({});
-  form.delete(`/workedPeriod/${time.id}`, {
+const deletePeriod = async(period) => {
+  const form = useForm({})
+  form.delete(`/workedPeriod/${period.id}`, {
     onSuccess: async () => {
-      await globalStore.fetchTimes();
+      await globalStore.fetchPeriods()
     }
-  });
-};
+  })
+}
 </script>

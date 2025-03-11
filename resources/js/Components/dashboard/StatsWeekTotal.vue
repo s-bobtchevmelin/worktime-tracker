@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <h3 class="font-bold mr-3">Heures travaillées cette semaine :</h3>
-    <div>{{ calculateTimesCumul(globalStore.times) }}</div>
+    <div>{{ calculateTimesCumul(globalStore.periods) }}</div>
   </div>
 </template>
 
