@@ -81,7 +81,7 @@ const save = async () => {
 
   inertiaForm.put(`/workedPeriod/${props.time.id}`, {
     onSuccess: async () => {
-      await globalStore.fetchTimes();
+      await globalStore.fetchPeriods();
       emit('saved');
     }
   });
