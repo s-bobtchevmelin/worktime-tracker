@@ -39,30 +39,37 @@ class WorkedPeriodController extends Controller
         ]);
     }
 
-    public function update(Request $request, WorkedPeriod $workedPeriod)
+    public function update(Request $request, WorkedPeriod $period)
     {
+        $validated = $request->validate([
+            'start' => 'required|string',
+            'end' => 'required|string',
+            'tag' => 'nullable|string',
+        ]);
+
         $userId = Auth::id();
-        $tag = $request->get('tag');
-
-        // Get worked period associate tag
-        $workedPeriodTag = $workedPeriod->tag_id ?? null;
-
-        // Update workedPeriod tag
-        if($tag && $workedPeriodTag) { // Case with tag
-            $tag = TagRepository::getOrCreateTag($userId, $tag);
-            $workedPeriod->tag_id = $tag ? $tag['id'] : null;
-        } else { // Case without tag
-            $workedPeriod->tag_id = null;
+        
+        // Manage tag
+        $tagName = $validated['tag'] ?? null;
+        $tagId = null;
+        
+        if ($tagName) {
+            // Use repository to get or create the tag
+            $tag = TagRepository::getOrCreateTag($userId, $tagName);
+            $tagId = $tag ? $tag['id'] : null;
         }
-
-        // Update period
-        if ($workedPeriod) {
-            $workedPeriod->start = $request->get('start');
-            $workedPeriod->end = $request->get('end');
-        }
-
-        // Save item
-        $workedPeriod->save();
+        
+        // Update period with start, end and tag values
+        $period->update([
+            'start' => $validated['start'],
+            'end' => $validated['end'],
+            'tag_id' => $tagId,
+        ]);
+        
+        return response()->json([
+            'message' => 'Period updated successfully',
+            'period' => $period->fresh()->load('tag')
+        ]);
     }
 
     public function destroy(WorkedPeriod $period)
