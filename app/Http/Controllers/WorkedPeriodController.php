@@ -6,7 +6,6 @@ use App\Http\Requests\WorkedPeriodStoreRequest;
 use App\Http\Requests\WorkedPeriodUpdateRequest;
 use App\Models\WorkedPeriod;
 use App\Repositories\TagRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class WorkedPeriodController extends Controller

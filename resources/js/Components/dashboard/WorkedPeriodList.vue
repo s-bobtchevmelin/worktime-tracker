@@ -12,7 +12,7 @@
 		<!-- Periods list -->
 		<div class="mb-1">
 			<div v-for="period in filteredPeriods[index + 1]" :key="'period-' + period.id">
-				<div class="w-8/12 lg:w-6/12 flex items-center">
+				<div v-if="updatingPeriod !== period.id" class="w-8/12 lg:w-6/12 flex items-center">
 					<div class="flex mr-5">
 
 					<!-- Delete -->
@@ -20,6 +20,13 @@
 						width="18" 
 						class="col-span-1 mr-2 cursor-pointer" 
 						@click="deletePeriod(period)"
+					>
+
+					<!-- Update -->
+					<img src="../../../images/icons/edit-icon-orange.svg" 
+						width="18" 
+						class="col-span-1 mr-2 cursor-pointer" 
+						@click="togglePeriodUpdate(period)"
 					>
 
 					<!-- Time -->
@@ -30,7 +37,11 @@
 					<tag v-if="period.tag" :tag="period.tag"></tag>
 				</div>
 
-				<WorkedPeriodUpdate :period="period"/>
+				<WorkedPeriodUpdate 
+					v-if="updatingPeriod === period.id" 
+					:period="period" 
+					@close-update-form="() => updatingPeriod = null"
+				/>
 			</div>
 		</div>
 
@@ -46,13 +57,15 @@ import SectionTitle from '@/Components/common/SectionTitle.vue';
 import Tag from '@/Components/common/Tag.vue';
 import { useGlobalStore } from '@/Stores/global-store';
 import moment from 'moment';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { calculateTimesCumul, defaultTimeFormat } from '@/Composables/dateTimesUtils'
 import { useForm } from '@inertiajs/vue3'
 import WorkedPeriodUpdate from './WorkedPeriodUpdate.vue';
 
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
+
+const updatingPeriod = ref(null)
 
 const filteredPeriods = computed(() => {
 	const periods = {}
@@ -67,6 +80,15 @@ const filteredPeriods = computed(() => {
 const getDayOfWeek = (index) => {
 	const date = globalStore.activeWeek[0].clone().add(index, 'days');
 	return date.format('DD')
+}
+
+const togglePeriodUpdate = (period) => {
+	// Current updating period open, close it
+	if(updatingPeriod.value === period.id) {
+		updatingPeriod.value = null
+	} else {
+		updatingPeriod.value = period.id
+	}
 }
 
 const deletePeriod = async(period) => {
