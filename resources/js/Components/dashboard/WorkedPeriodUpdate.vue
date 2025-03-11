@@ -25,8 +25,6 @@
               <img src="../../../images/icons/cancel-icon.svg" width="18" style="max-width: unset;">
             </SecondaryButton>
           </div>
-  
-          
         </div>
       </form>
   
@@ -56,7 +54,6 @@
   })
   
   const update = async () => {  
-    
     form
       .transform(data => ({
         start: dbTimeFormat(data.start),
