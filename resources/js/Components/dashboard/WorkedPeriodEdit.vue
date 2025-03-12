@@ -5,8 +5,7 @@
   
           <div class="flex items-center">
             <!-- Times -->
-            <span>De</span>
-            <InputDefault v-model="form.start" type="time" class="mx-3" dense />
+            <InputDefault v-model="form.start" type="time" class="mr-3" dense />
             <span>à</span>
             <InputDefault v-model="form.end" type="time" class="mx-3" dense />
           </div>

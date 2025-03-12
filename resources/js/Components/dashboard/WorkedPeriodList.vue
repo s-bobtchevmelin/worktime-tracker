@@ -37,7 +37,7 @@
 					<tag v-if="period.tag" :tag="period.tag"></tag>
 				</div>
 
-				<WorkedPeriodUpdate 
+				<WorkedPeriodEdit 
 					v-if="updatingPeriod === period.id" 
 					:period="period" 
 					@close-update-form="() => updatingPeriod = null"
@@ -60,7 +60,7 @@ import moment from 'moment';
 import { computed, ref } from 'vue';
 import { calculateTimesCumul, defaultTimeFormat } from '@/Composables/dateTimesUtils'
 import { useForm } from '@inertiajs/vue3'
-import WorkedPeriodUpdate from './WorkedPeriodUpdate.vue';
+import WorkedPeriodEdit from './WorkedPeriodEdit.vue';
 
 const props = defineProps(['days'])
 const globalStore = useGlobalStore()
@@ -83,12 +83,7 @@ const getDayOfWeek = (index) => {
 }
 
 const togglePeriodUpdate = (period) => {
-	// Current updating period open, close it
-	if(updatingPeriod.value === period.id) {
-		updatingPeriod.value = null
-	} else {
-		updatingPeriod.value = period.id
-	}
+	updatingPeriod.value = period.id
 }
 
 const deletePeriod = async(period) => {
