@@ -60,18 +60,12 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Add server to known hosts
-        env:
-          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H $O2SWITCH_URL >> ~/.ssh/known_hosts
-
       - name: TEST SSH
         env:
           O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
           O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
         run: |
+          ssh-keyscan -t rsa $O2SWITCH_URL >> ~/.ssh/known_hosts
           ssh $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
             echo "SSH connection successful!"
             echo "List of files:"
