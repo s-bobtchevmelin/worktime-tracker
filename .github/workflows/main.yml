@@ -1,0 +1,63 @@
+name: Deploy Laravel Application
+
+on:
+  push:
+    branches: [ main ]  # Adjust this to your main branch name
+
+jobs:
+  # Build and deploy laravel api files
+  deploy_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl
+          
+      - name: Remove vendor and node_module
+        run: |
+          rm -rf node_modules
+          rm -rf vendor
+          ls -la
+          
+      - name: Deploy api via FTP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+          lftp -c "set ftp:ssl-allow no; open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}; mirror -R --delete ./ /; bye"
+    
+  build_deploy_front:
+    needs: transfer_to_server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Composer dependencies
+        run: composer install
+        
+      - name: Build and compile files
+        run: |
+          npm install
+          npm run build
+          
+      - name: Deploy front via FTP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+          lftp -c "set ftp:ssl-allow no; open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}; mirror -R --delete ./public /public; bye"
