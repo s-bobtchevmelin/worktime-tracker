@@ -33,7 +33,7 @@ jobs:
         shell: bash
         env:
           O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
-          O2SWITCH_PASSWORD: ${{ secrets.FTPO2SWITCH_PASSWORD_PASSWORD }}
+          O2SWITCH_PASSWORD: ${{ secrets.O2SWITCH_PASSWORD }}
           O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
         run: |
           ENDPOINT='frontend/o2switch/o2switch-ssh-whitelist/index.live.php'
