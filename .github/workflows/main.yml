@@ -22,49 +22,97 @@ jobs:
           rm -rf node_modules
           rm -rf vendor
           ls -la
-          
-      - name: Deploy api via FTP
+
+        # Récupérer l'IP publique du runner GitHub
+      - name: Get runner's public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      # Ajouter l'IP du runner à la whitelist SSH de o2Switch
+      - name: Whitelist IP on hosting & delete github old ones (o2switch)
+        shell: bash
         env:
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
+          O2SWITCH_PASSWORD: ${{ secrets.FTPO2SWITCH_PASSWORD_PASSWORD }}
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-          lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./ /; bye"
+          ENDPOINT='frontend/o2switch/o2switch-ssh-whitelist/index.live.php'
+
+          echo "Get actual whitelisted IPs..."
+          RESPONSE=$(curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=list")
+          echo "Response: $RESPONSE"
+          UNIQUE_IPS=$(echo "$RESPONSE" | jq -r '.data.list[] | .address' | sort -u)
+
+          for address in $UNIQUE_IPS; do
+            echo "Delete this github IP: $address (in & out)"
+            curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=remove&address=$address&direction=in&port=22" | jq
+            sleep 3
+            curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=remove&address=$address&direction=out&port=22" | jq
+            sleep 3
+          done
+          echo "All non-whitelisted IPs deleted!"
+
+          echo "Attempt to whitelist IP..."
+          curl -sX POST -d 'whitelist[address]=${{ steps.ip.outputs.ipv4 }}' -d 'whitelist[port]=22' "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=add" | jq
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: TEST SSH
+        env:
+          O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
+        run: |
+          ssh $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
+            echo "SSH connection successful!"
+            echo "List of files:"
+            ls -la
+          EOL
+          
+      # - name: Deploy api via FTP
+      #   env:
+      #     FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      #     FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      #     FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y lftp
+      #     lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./ /; bye"
     
-  build_deploy_front:
-    needs: deploy_backend
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build_deploy_front:
+  #   needs: deploy_backend
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
         
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: mbstring, xml, ctype, iconv, intl
+  #     - name: Setup PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: '8.3'
+  #         extensions: mbstring, xml, ctype, iconv, intl
           
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
           
-      - name: Composer dependencies
-        run: composer install
+  #     - name: Composer dependencies
+  #       run: composer install
         
-      - name: Build and compile files
-        run: |
-          npm install
-          npm run build
+  #     - name: Build and compile files
+  #       run: |
+  #         npm install
+  #         npm run build
           
-      - name: Deploy front via FTP
-        env:
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-          lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./public /public; bye"
+  #     - name: Deploy front via FTP
+  #       env:
+  #         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+  #         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+  #         FTP_SERVER: ${{ secrets.FTP_SERVER }}
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y lftp
+  #         lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./public /public; bye"
