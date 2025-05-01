@@ -23,7 +23,7 @@ jobs:
           rm -rf vendor
           ls -la
 
-        # Récupérer l'IP publique du runner GitHub
+      # Récupérer l'IP publique du runner GitHub
       - name: Get runner's public IP
         id: ip
         uses: haythem/public-ip@v1.3
@@ -39,7 +39,7 @@ jobs:
           ENDPOINT='frontend/o2switch/o2switch-ssh-whitelist/index.live.php'
 
           echo "Get actual whitelisted IPs..."
-          RESPONSE=$(curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=list")
+          RESPONSE=$(curl -s -u "$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD" "https://$O2SWITCH_URL:2083/$ENDPOINT?r=list")
           echo "Response: $RESPONSE"
           UNIQUE_IPS=$(echo "$RESPONSE" | jq -r '.data.list[] | .address' | sort -u)
 
@@ -53,7 +53,7 @@ jobs:
           echo "All non-whitelisted IPs deleted!"
 
           echo "Attempt to whitelist IP..."
-          curl -sX POST -d 'whitelist[address]=${{ steps.ip.outputs.ipv4 }}' -d 'whitelist[port]=22' "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=add" | jq
+          curl -sX POST -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" -d "whitelist[port]=22" "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=add" | jq
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
