@@ -61,9 +61,11 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Add server to known hosts
+        env:
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H $O2SWITCH_URL >> ~/.ssh/known_hosts
 
       - name: TEST SSH
         env:
