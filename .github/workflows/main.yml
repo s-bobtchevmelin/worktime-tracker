@@ -31,7 +31,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
-          lftp -c "set ftp:ssl-allow no; open -u "%FTP_USERNAME%","%FTP_PASSWORD%" "%FTP_SERVER%"; mirror -R --delete ./ /; bye"
+          lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./ /; bye"
     
   build_deploy_front:
     needs: deploy_backend
@@ -67,4 +67,4 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
-          lftp -c "set ftp:ssl-allow no; open -u "%FTP_USERNAME%","%FTP_PASSWORD%" "%FTP_SERVER%"; mirror -R --delete ./public /public; bye"
+          lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./public /public; bye"
