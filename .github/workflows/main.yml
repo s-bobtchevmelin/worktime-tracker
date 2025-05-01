@@ -31,7 +31,7 @@ jobs:
           lftp -c "set ftp:ssl-allow no; open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}; mirror -R --delete ./ /; bye"
     
   build_deploy_front:
-    needs: transfer_to_server
+    needs: deploy_backend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
