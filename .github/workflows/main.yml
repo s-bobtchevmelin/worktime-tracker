@@ -65,8 +65,7 @@ jobs:
           O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
           O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
         run: |
-          ssh-keyscan -t rsa $O2SWITCH_URL >> ~/.ssh/known_hosts
-          ssh $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
+          ssh -o StrictHostKeyChecking=no $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
             echo "SSH connection successful!"
             echo "List of files:"
             ls -la
