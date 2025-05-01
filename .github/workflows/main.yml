@@ -39,26 +39,7 @@ jobs:
           ENDPOINT='frontend/o2switch/o2switch-ssh-whitelist/index.live.php'
 
           echo "Get actual whitelisted IPs..."
-
-          # Print some debug info
-          echo "Debug: Attempting to connect to URL: https://$O2SWITCH_URL:2083"
-
-          # Try a simpler curl command first to check basic connectivity
-          echo "Testing basic connectivity..."
-          curl -s -I -m 5 "https://$O2SWITCH_URL:2083" || echo "Basic connection failed"
-
-          # Now try the actual API call with more detailed output
-          RESPONSE=$(curl -s -v -u "$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD" "https://$O2SWITCH_URL:2083/$ENDPOINT?r=list" 2>&1)
-          curl_status=$?
-          echo "Curl exit code: $curl_status"
-          echo "Response: $RESPONSE"
-
-
-
-
-          # RESPONSE=$(curl -s -u "$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD" "https://$O2SWITCH_URL:2083/$ENDPOINT?r=list")
-          # echo "Response: $RESPONSE"
-          UNIQUE_IPS=$(echo "$RESPONSE" | jq -r '.data.list[] | .address' | sort -u)
+          UNIQUE_IPS=$(curl -H "Authorization: $AUTH_STR" -H "X-CPANEL-OTP: $OTP" -sX GET "https://${{ secrets.SSH_HOST }}:2083/$ENDPOINT?r=list" | jq -r '.data.list[] | .address' | sort -u)
 
           for address in $UNIQUE_IPS; do
             echo "Delete this github IP: $address (in & out)"
