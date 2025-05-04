@@ -5,7 +5,7 @@ on:
     branches: [ main ]  # Adjust this to your main branch name
 
 jobs:
-  deploy_backend:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -60,16 +60,18 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: TEST SSH
+      - name: Deploy to server
         env:
           O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
           O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
         run: |
-          ssh -o StrictHostKeyChecking=no $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
-            echo "SSH connection successful!"
-            echo "List of files:"
-            ls -la
-          EOL
+          rsync -avz --delete \
+            --exclude='.git/' \
+            --exclude='vendor/' \
+            --exclude='node_modules/' \
+            --exclude='.env' \
+            ./ $O2SWITCH_USERNAME@$O2SWITCH_URL:/worktime-tracker.sarah-bobtchev-melin.com/admin/ \
+            -e "ssh -o StrictHostKeyChecking=no"
           
       # - name: Deploy api via FTP
       #   env:
