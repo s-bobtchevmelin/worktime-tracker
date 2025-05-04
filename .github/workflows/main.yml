@@ -16,12 +16,6 @@ jobs:
         with:
           php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv, intl
-          
-      - name: Remove vendor and node_module
-        run: |
-          rm -rf node_modules
-          rm -rf vendor
-          ls -la
 
       # Récupérer l'IP publique du runner GitHub
       - name: Get runner's public IP
