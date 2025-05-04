@@ -100,5 +100,5 @@ jobs:
             php artisan cache:clear
 
             echo "## Migrate database..."
-            php artisan migrate -n
+            php artisan migrate --force
           EOL
