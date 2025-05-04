@@ -5,23 +5,11 @@ export function defaultDateFormat(date) {
 }
 
 export function dbTimeFormat(time) {
-
-  if (!time) return null
-
-  // Time already in correct format, skip formatting
-  if (/^\d{2}:\d{2}:\d{2}$/.test(time)) {
-    return time
-  }
-
-  return time + ':00'
+  return moment(time, 'HH:mm:ss').format('HH:mm:ss')
 }
 
 export function dbDateFormat(date) {
   return date ? date.format('YYYY-MM-DD') : null
-}
-
-export function getTimeFormat(time) {
-  return moment(time, "HH:mm")
 }
 
 export function defaultTimeFormat(time) {
