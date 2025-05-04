@@ -1,15 +1,15 @@
 import moment from 'moment';
 
 export function defaultDateFormat(date) {
-  return date.format('DD/MM/YYYY')
+  return date ? date.format('DD/MM/YYYY') : null
+}
+
+export function dbTimeFormat(time) {
+  return moment(time, 'HH:mm:ss').format('HH:mm:ss')
 }
 
 export function dbDateFormat(date) {
-  return date.format('YYYY-MM-DD')
-}
-
-export function getTimeFormat(time) {
-  return moment(time, "HH:mm")
+  return date ? date.format('YYYY-MM-DD') : null
 }
 
 export function defaultTimeFormat(time) {
