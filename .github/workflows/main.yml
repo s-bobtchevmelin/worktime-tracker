@@ -72,16 +72,25 @@ jobs:
             --exclude='.env' \
             ./ $O2SWITCH_USERNAME@$O2SWITCH_URL:/home/$O2SWITCH_USERNAME/worktime-tracker.sarah-bobtchev-melin.com/admin/ \
             -e "ssh -o StrictHostKeyChecking=no"
+
+      - name: Install deployed updates
+        env:
+          O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
+            cd ./worktime-tracker.sarah-bobtchev-melin.com/admin/
+            cp ../.env ./.env
+            composer install
+            npm install
+            php artisan config:clear
+            php artisan migrate -n
+            php artisan route:clear
+            php artisan view:clear
+            php artisan cache:clear
+            php artisan server
+          EOL
           
-      # - name: Deploy api via FTP
-      #   env:
-      #     FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-      #     FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-      #     FTP_SERVER: ${{ secrets.FTP_SERVER }}
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y lftp
-      #     lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./ /; bye"
     
   # build_deploy_front:
   #   needs: deploy_backend
