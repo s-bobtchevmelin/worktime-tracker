@@ -80,15 +80,30 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
             cd ./worktime-tracker.sarah-bobtchev-melin.com/admin/
+
+            echo "Setup .env..."
             cp ../.env ./.env
+
+            echo "Install php dependencies..."
             composer install
+
+            echo "Install npm dependencies..."
             npm install
+
+            echo "Build front..."
+            npm run build
+
+            echo "Clear caches..."
             php artisan config:clear
-            php artisan migrate -n
             php artisan route:clear
             php artisan view:clear
             php artisan cache:clear
-            php artisan server
+
+            echo "Migrate database..."
+            php artisan migrate -n
+
+            echo "Up server (temp)..."
+            php artisan serve
           EOL
           
     
