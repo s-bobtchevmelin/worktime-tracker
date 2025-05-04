@@ -38,9 +38,9 @@ jobs:
         run: |
           ENDPOINT='frontend/o2switch/o2switch-ssh-whitelist/index.live.php'
 
-          echo "Get actual whitelisted IPs..."
+          echo "## Get actual whitelisted IPs..."
           RESPONSE=$(curl -s -u "$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD" "https://$O2SWITCH_URL:2083/$ENDPOINT?r=list")
-          echo "Response: $RESPONSE"
+          echo "## Response: $RESPONSE"
           UNIQUE_IPS=$(echo "$RESPONSE" | jq -r '.data.list[] | .address' | sort -u)
 
           for address in $UNIQUE_IPS; do
@@ -50,9 +50,9 @@ jobs:
             curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=remove&address=$address&direction=out&port=22" | jq
             sleep 3
           done
-          echo "All non-whitelisted IPs deleted!"
+          echo "## All non-whitelisted IPs deleted!"
 
-          echo "Attempt to whitelist IP..."
+          echo "## Attempt to whitelist IP..."
           curl -sX POST -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" -d "whitelist[port]=22" "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=add" | jq
 
       - name: Setup SSH
@@ -60,7 +60,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to server
+      - name: Upload files to server
         env:
           O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
           O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
@@ -73,7 +73,7 @@ jobs:
             ./ $O2SWITCH_USERNAME@$O2SWITCH_URL:/home/$O2SWITCH_USERNAME/worktime-tracker.sarah-bobtchev-melin.com/admin/ \
             -e "ssh -o StrictHostKeyChecking=no"
 
-      - name: Install deployed updates
+      - name: Deploy application
         env:
           O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
           O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
@@ -81,64 +81,24 @@ jobs:
           ssh -o StrictHostKeyChecking=no $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
             cd ./worktime-tracker.sarah-bobtchev-melin.com/admin/
 
-            echo "Setup .env..."
+            echo "## Setup .env..."
             cp ../.env ./.env
 
-            echo "Install php dependencies..."
+            echo "## Install php dependencies..."
             composer install
 
-            echo "Install npm dependencies..."
+            echo "## Install npm dependencies..."
             npm install
 
-            echo "Build front..."
+            echo "## Build front..."
             npm run build
 
-            echo "Clear caches..."
+            echo "## Clear caches..."
             php artisan config:clear
             php artisan route:clear
             php artisan view:clear
             php artisan cache:clear
 
-            echo "Migrate database..."
+            echo "## Migrate database..."
             php artisan migrate -n
-
-            echo "Up server (temp)..."
-            php artisan serve
           EOL
-          
-    
-  # build_deploy_front:
-  #   needs: deploy_backend
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-        
-  #     - name: Setup PHP
-  #       uses: shivammathur/setup-php@v2
-  #       with:
-  #         php-version: '8.3'
-  #         extensions: mbstring, xml, ctype, iconv, intl
-          
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '18'
-          
-  #     - name: Composer dependencies
-  #       run: composer install
-        
-  #     - name: Build and compile files
-  #       run: |
-  #         npm install
-  #         npm run build
-          
-  #     - name: Deploy front via FTP
-  #       env:
-  #         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-  #         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-  #         FTP_SERVER: ${{ secrets.FTP_SERVER }}
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get install -y lftp
-  #         lftp -c "set ftp:ssl-allow no; open -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER"; mirror -R --delete ./public /public; bye"
