@@ -1,0 +1,98 @@
+name: Deploy Laravel Application
+
+on:
+  push:
+    branches: [ main ]  # Adjust this to your main branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl
+
+      # Récupérer l'IP publique du runner GitHub
+      - name: Get runner's public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      # Ajouter l'IP du runner à la whitelist SSH de o2Switch
+      - name: Whitelist IP on hosting & delete github old ones (o2switch)
+        shell: bash
+        env:
+          O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
+          O2SWITCH_PASSWORD: ${{ secrets.O2SWITCH_PASSWORD }}
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
+        run: |
+          ENDPOINT='frontend/o2switch/o2switch-ssh-whitelist/index.live.php'
+
+          echo "## Get actual whitelisted IPs..."
+          RESPONSE=$(curl -s -u "$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD" "https://$O2SWITCH_URL:2083/$ENDPOINT?r=list")
+          echo "## Response: $RESPONSE"
+          UNIQUE_IPS=$(echo "$RESPONSE" | jq -r '.data.list[] | .address' | sort -u)
+
+          for address in $UNIQUE_IPS; do
+            echo "Delete this github IP: $address (in & out)"
+            curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=remove&address=$address&direction=in&port=22" | jq
+            sleep 3
+            curl -sX GET "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=remove&address=$address&direction=out&port=22" | jq
+            sleep 3
+          done
+          echo "## All non-whitelisted IPs deleted!"
+
+          echo "## Attempt to whitelist IP..."
+          curl -sX POST -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" -d "whitelist[port]=22" "https://$O2SWITCH_USERNAME:$O2SWITCH_PASSWORD@$O2SWITCH_URL:2083/$ENDPOINT?r=add" | jq
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Upload files to server
+        env:
+          O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
+        run: |
+          rsync -avz --delete \
+            --exclude='.git/' \
+            --exclude='vendor/' \
+            --exclude='node_modules/' \
+            --exclude='.env' \
+            ./ $O2SWITCH_USERNAME@$O2SWITCH_URL:/home/$O2SWITCH_USERNAME/worktime-tracker.sarah-bobtchev-melin.com/admin/ \
+            -e "ssh -o StrictHostKeyChecking=no"
+
+      - name: Deploy application
+        env:
+          O2SWITCH_USERNAME: ${{ secrets.O2SWITCH_USERNAME }}
+          O2SWITCH_URL: ${{ secrets.O2SWITCH_URL }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $O2SWITCH_USERNAME@$O2SWITCH_URL << 'EOL'
+            cd ./worktime-tracker.sarah-bobtchev-melin.com/admin/
+
+            echo "## Setup .env..."
+            cp ../.env ./.env
+
+            echo "## Install php dependencies..."
+            composer install
+
+            echo "## Install npm dependencies..."
+            npm install
+
+            echo "## Build front..."
+            npm run build
+
+            echo "## Clear caches..."
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+            php artisan cache:clear
+
+            echo "## Migrate database..."
+            php artisan migrate --force
+          EOL
